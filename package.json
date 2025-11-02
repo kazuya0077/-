@@ -1,0 +1,20 @@
+{
+  "name": "physiotherapy-intake-form",
+  "version": "1.0.0",
+  "description": "理学療法士が受診勧奨に必要な情報を整理できるモダンな問診フォーム。Google スプレッドシート連携や 3KQ スクリーニングを備えています。",
+  "main": "script.js",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js",
+    "build": "node scripts/export-static.js",
+    "vercel-build": "npm run build"
+  },
+  "keywords": [
+    "physiotherapy",
+    "questionnaire",
+    "fall-prevention"
+  ],
+  "author": "",
+  "license": "MIT",
+  "type": "commonjs"
+}
