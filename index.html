@@ -72,6 +72,19 @@
                   <span class="field-hint">生年月日から自動計算されます</span>
                 </label>
                 <label>
+                  身長（cm）
+                  <input type="number" name="height_cm" min="50" max="220" step="0.1" />
+                </label>
+                <label>
+                  体重（kg）
+                  <input type="number" name="weight_kg" min="20" max="200" step="0.1" />
+                </label>
+                <label>
+                  BMI
+                  <input type="number" name="bmi" min="10" max="60" step="0.1" />
+                  <span class="field-hint">身長と体重から算出した値を入力してください</span>
+                </label>
+                <label>
                   性別
                   <select name="sex" required>
                     <option value="" disabled selected>選択してください</option>
@@ -99,6 +112,10 @@
                   同居家族・支援者
                   <input type="text" name="household" placeholder="例：妻・長女（週1回支援）" />
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -128,6 +145,10 @@
                   <input type="text" name="support_trigger_other" />
                 </label>
               </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
             </section>
 
             <section data-section>
@@ -135,19 +156,25 @@
               <div class="grid">
                 <label class="wide">
                   既往歴（当てはまるものを選択）
-                  <select name="medical_history">
-                    <option value="" disabled selected>選択してください</option>
+                  <select name="medical_history" multiple size="6">
                     <option value="特になし">特になし</option>
                     <option value="高血圧">高血圧</option>
                     <option value="糖尿病">糖尿病</option>
                     <option value="脂質異常症">脂質異常症</option>
-                    <option value="心臓の病気">心臓の病気</option>
-                    <option value="脳卒中">脳卒中</option>
-                    <option value="骨や関節の病気">骨や関節の病気</option>
-                    <option value="呼吸器の病気">呼吸器の病気</option>
+                    <option value="心臓の病気">心臓の病気（心不全・不整脈など）</option>
+                    <option value="脳卒中">脳卒中・TIA</option>
+                    <option value="整形外科疾患">整形外科疾患（変形性関節症・脊柱管狭窄症など）</option>
+                    <option value="骨粗しょう症">骨粗しょう症</option>
+                    <option value="慢性腰痛">慢性腰痛</option>
+                    <option value="呼吸器疾患">呼吸器疾患（COPD・喘息など）</option>
+                    <option value="腎臓病">腎臓病</option>
+                    <option value="がん">がん治療歴</option>
+                    <option value="神経筋疾患">神経・筋疾患（パーキンソン病など）</option>
+                    <option value="認知症">認知症・軽度認知障害</option>
+                    <option value="うつ・不安障害">うつ・不安障害</option>
                     <option value="その他">その他</option>
                   </select>
-                  <span class="field-hint">複数ある場合は主なものを選び、必要に応じて下の欄に記入してください。</span>
+                  <span class="field-hint">Ctrl（または⌘）キーを押しながら選択すると複数選べます。該当する主なものを選んでください。</span>
                 </label>
                 <label class="wide" data-conditional="medical_history:その他">
                   その他の病気やけが
@@ -157,6 +184,10 @@
                   入院や手術の経験（年代や内容など）
                   <textarea name="hospital_history" rows="2"></textarea>
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -184,6 +215,10 @@
                   食べ物や薬で気になること
                   <textarea name="allergies" rows="3"></textarea>
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -222,6 +257,10 @@
                   受けられていない理由
                   <textarea name="checkup_reason" rows="2"></textarea>
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -331,6 +370,10 @@
                   <textarea name="fall_prevention" rows="2"></textarea>
                 </label>
               </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
             </section>
 
             <section data-section>
@@ -358,13 +401,35 @@
                   地域や家族での役割
                   <textarea name="social_participation" rows="2"></textarea>
                 </label>
-                <label class="wide">
+                <label>
                   睡眠のようす
-                  <textarea name="sleep_quality" rows="2"></textarea>
+                  <select name="sleep_quality">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="熟睡できている">熟睡できている</option>
+                    <option value="寝つきが悪い">寝つきが悪い</option>
+                    <option value="途中で目が覚める">途中で目が覚める</option>
+                    <option value="早朝に目が覚める">早朝に目が覚める</option>
+                    <option value="日中に眠気が強い">日中に眠気が強い</option>
+                  </select>
                 </label>
-                <label class="wide">
+                <label class="wide" data-conditional="sleep_quality:寝つきが悪い,sleep_quality:途中で目が覚める,sleep_quality:早朝に目が覚める,sleep_quality:日中に眠気が強い">
+                  睡眠について補足があれば記載してください
+                  <textarea name="sleep_detail" rows="2"></textarea>
+                </label>
+                <label>
                   食事のようす
-                  <textarea name="nutrition" rows="2"></textarea>
+                  <select name="nutrition">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="1日3食とれている">1日3食とれている</option>
+                    <option value="食事量が少ない">食事量が少ない</option>
+                    <option value="偏食がある">偏食がある</option>
+                    <option value="むせ込みが気になる">むせ込みが気になる</option>
+                    <option value="食欲がない">食欲がない</option>
+                  </select>
+                </label>
+                <label class="wide" data-conditional="nutrition:食事量が少ない,nutrition:偏食がある,nutrition:むせ込みが気になる,nutrition:食欲がない">
+                  食生活について補足があれば記載してください
+                  <textarea name="nutrition_detail" rows="2"></textarea>
                 </label>
                 <label>
                   1日の水分量の目安
@@ -391,6 +456,56 @@
                   <input type="text" name="elimination_other" />
                 </label>
               </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>しびれ・感覚の気になる部位</h2>
+              <div class="grid">
+                <label class="wide">
+                  症状が気になる部位
+                  <select name="sensory_areas" multiple size="6">
+                    <option value="なし">特に気になる部位はない</option>
+                    <option value="頭部・顔面">頭部・顔面</option>
+                    <option value="首・肩">首・肩</option>
+                    <option value="上腕・肘">上腕・肘</option>
+                    <option value="前腕・手">前腕・手</option>
+                    <option value="胸部・背中">胸部・背中</option>
+                    <option value="腰・骨盤">腰・骨盤</option>
+                    <option value="太もも">太もも</option>
+                    <option value="膝まわり">膝まわり</option>
+                    <option value="ふくらはぎ">ふくらはぎ</option>
+                    <option value="足首・足指">足首・足指</option>
+                  </select>
+                  <span class="field-hint">複数選択できます。ボディスキーマを意識し、主要な部位を選んでください。</span>
+                </label>
+                <label>
+                  しびれ・感覚の特徴
+                  <select name="sensory_quality">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="ピリピリする">ピリピリする</option>
+                    <option value="じんじんする">じんじんする</option>
+                    <option value="感覚が鈍い">感覚が鈍い</option>
+                    <option value="触ると違和感がある">触ると違和感がある</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </label>
+                <label class="wide" data-conditional="sensory_quality:その他">
+                  その他の感じ方
+                  <input type="text" name="sensory_quality_other" />
+                </label>
+                <label class="wide">
+                  日時や状況など詳細
+                  <textarea name="sensory_detail" rows="2"></textarea>
+                </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
             </section>
 
             <section data-section>
@@ -412,18 +527,6 @@
                   <textarea name="mobility_strength" rows="2"></textarea>
                 </label>
                 <label>
-                  身長（cm）
-                  <input type="number" name="height_cm" min="50" max="220" step="0.1" />
-                </label>
-                <label>
-                  体重（kg）
-                  <input type="number" name="weight_kg" min="20" max="200" step="0.1" />
-                </label>
-                <label>
-                  BMI
-                  <input type="number" name="bmi" min="10" max="60" step="0.1" />
-                </label>
-                <label>
                   半年以内の体重変化
                   <select name="weight_change">
                     <option value="" disabled selected>選択してください</option>
@@ -432,6 +535,10 @@
                     <option value="減少傾向">減少傾向</option>
                   </select>
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -493,6 +600,10 @@
                   <textarea name="recovery" rows="2"></textarea>
                 </label>
               </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
             </section>
 
             <section data-section>
@@ -514,6 +625,10 @@
                   やる気や活動量の変化
                   <textarea name="motivation" rows="2"></textarea>
                 </label>
+              </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
               </div>
             </section>
 
@@ -545,6 +660,10 @@
                   <textarea name="additional_notes" rows="2"></textarea>
                 </label>
               </div>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
+              </div>
             </section>
 
             <section data-section>
@@ -553,9 +672,13 @@
                 <input type="checkbox" name="consent" value="同意済" required />
                 <span>本フォームで収集した情報を受診勧奨および支援調整の目的に使用することに同意します。</span>
               </label>
+              <div class="section-controls">
+                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
+                <button type="button" class="primary-button" data-step="next">確認画面へ</button>
+              </div>
             </section>
 
-            <div class="actions">
+            <div class="actions" hidden>
               <button type="button" id="previewButton" class="ghost-button">入力内容をプレビュー</button>
               <button type="submit" class="primary-button">Googleスプレッドシートに送信</button>
               <p id="statusMessage" role="status" aria-live="polite"></p>

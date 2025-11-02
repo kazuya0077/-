@@ -4,6 +4,9 @@ const scriptURL =
 const STORAGE_KEY = 'physio-questionnaire-v1';
 
 const form = document.getElementById('questionnaireForm');
+if (!form) {
+  throw new Error('Questionnaire form not found.');
+}
 const statusMessage = document.getElementById('statusMessage');
 const submitButton = form.querySelector('button[type="submit"]');
 const previewButton = document.getElementById('previewButton');
@@ -22,6 +25,9 @@ const ageInput = form.elements.namedItem('age');
 
 const conditionalFields = Array.from(document.querySelectorAll('[data-conditional]'));
 const sections = Array.from(form.querySelectorAll('section[data-section]'));
+const actionsContainer = document.querySelector('.actions');
+
+let currentSectionIndex = 0;
 
 let saveTimeout = null;
 let isRestoring = false;
@@ -79,7 +85,11 @@ function evaluateConditions(conditionString) {
   return groups.some((group) => {
     const [name, value] = group.split(':');
     if (!name || value === undefined) return false;
-    return getFieldValue(name.trim()) === value.trim();
+    const fieldValue = getFieldValue(name.trim());
+    if (Array.isArray(fieldValue)) {
+      return fieldValue.includes(value.trim());
+    }
+    return fieldValue === value.trim();
   });
 }
 
@@ -93,6 +103,81 @@ function updateConditionalFields() {
       clearFieldInputs(field);
     }
   });
+}
+
+function validateSection(index) {
+  const section = sections[index];
+  if (!section) return true;
+  const focusable = Array.from(section.querySelectorAll('input, select, textarea'));
+  const requiredElements = focusable.filter((element) => element.required && !element.disabled);
+
+  for (const element of requiredElements) {
+    if (!element.checkValidity()) {
+      element.reportValidity();
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function updateActionsVisibility() {
+  if (!actionsContainer) return;
+  const shouldShow = sections.length > 0 && currentSectionIndex === sections.length - 1;
+  actionsContainer.hidden = !shouldShow;
+}
+
+function updateStepNavigation() {
+  if (!sectionNav) return;
+  const buttons = Array.from(sectionNav.querySelectorAll('button[data-step-index]'));
+  buttons.forEach((button) => {
+    const index = Number(button.dataset.stepIndex);
+    const isActive = index === currentSectionIndex;
+    button.classList.toggle('is-active', isActive);
+    button.classList.toggle('is-complete', index < currentSectionIndex);
+    button.disabled = isActive;
+    button.setAttribute('aria-current', isActive ? 'step' : 'false');
+  });
+}
+
+function showSection(index, options = {}) {
+  if (sections.length === 0) return;
+  const clampedIndex = Math.max(0, Math.min(index, sections.length - 1));
+  currentSectionIndex = clampedIndex;
+
+  sections.forEach((section, sectionIndex) => {
+    const isActive = sectionIndex === currentSectionIndex;
+    section.dataset.active = isActive ? 'true' : 'false';
+    section.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+    const controls = section.querySelector('.section-controls');
+    if (controls) {
+      controls.hidden = !isActive;
+    }
+    const prevButton = section.querySelector('[data-step="prev"]');
+    if (prevButton) {
+      prevButton.hidden = !isActive || sectionIndex === 0;
+      prevButton.disabled = sectionIndex === 0;
+    }
+    const nextButton = section.querySelector('[data-step="next"]');
+    if (nextButton) {
+      nextButton.hidden = !isActive;
+      nextButton.textContent = sectionIndex === sections.length - 1 ? '確認画面へ' : '次のセクションへ';
+    }
+
+    if (isActive && !options.preventFocus) {
+      const firstField = section.querySelector('input, select, textarea, button:not([data-step])');
+      if (firstField && typeof firstField.focus === 'function') {
+        try {
+          firstField.focus({ preventScroll: true });
+        } catch (error) {
+          firstField.focus();
+        }
+      }
+    }
+  });
+
+  updateStepNavigation();
+  updateActionsVisibility();
 }
 
 function initializeRangeOutputs() {
@@ -449,39 +534,20 @@ function buildSectionNavigation() {
     const heading = section.querySelector('h2');
     if (!heading) return;
     const item = document.createElement('li');
-    const link = document.createElement('a');
-    link.href = `#${section.id}`;
-    link.textContent = heading.textContent.trim();
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.stepIndex = String(index);
+    button.textContent = heading.textContent.trim();
+    button.addEventListener('click', () => {
+      if (index > currentSectionIndex && !validateSection(currentSectionIndex)) {
+        return;
+      }
+      showSection(index, { preventFocus: false });
     });
-    item.appendChild(link);
+    item.appendChild(button);
     sectionNav.appendChild(item);
   });
-
-  const links = Array.from(sectionNav.querySelectorAll('a'));
-  if (links.length === 0) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          links.forEach((link) => {
-            const isActive = link.getAttribute('href') === `#${id}`;
-            link.classList.toggle('active', isActive);
-          });
-        }
-      });
-    },
-    {
-      rootMargin: '-40% 0px -50% 0px',
-      threshold: 0,
-    }
-  );
-
-  sections.forEach((section) => observer.observe(section));
+  updateStepNavigation();
 }
 
 function updateProgress() {
@@ -582,6 +648,7 @@ async function handleSubmit(event) {
     initializeRangeOutputs();
     updateProgress();
     updateAgeFromBirthdate();
+    showSection(0);
     closePreview();
   } catch (error) {
     console.error(error);
@@ -593,11 +660,40 @@ async function handleSubmit(event) {
 }
 
 buildSectionNavigation();
+showSection(0, { preventFocus: true });
 updateConditionalFields();
 initializeRangeOutputs();
 restoreFormState();
 updateProgress();
 updateAgeFromBirthdate({ enforceFormat: true });
+showSection(currentSectionIndex, { preventFocus: true });
+
+sections.forEach((section, index) => {
+  const prevButton = section.querySelector('[data-step="prev"]');
+  if (prevButton) {
+    prevButton.addEventListener('click', () => {
+      if (index === 0) return;
+      showSection(index - 1);
+    });
+  }
+
+  const nextButton = section.querySelector('[data-step="next"]');
+  if (nextButton) {
+    nextButton.addEventListener('click', () => {
+      if (!validateSection(index)) {
+        return;
+      }
+
+      if (index === sections.length - 1) {
+        updateActionsVisibility();
+        openPreview();
+        return;
+      }
+
+      showSection(index + 1);
+    });
+  }
+});
 
 form.addEventListener('submit', handleSubmit);
 form.addEventListener('change', () => {
@@ -653,6 +749,7 @@ clearStorageButton.addEventListener('click', () => {
   initializeRangeOutputs();
   updateProgress();
   updateAgeFromBirthdate();
+  showSection(0);
   setLastSavedMessage();
   statusMessage.textContent = '保存データを削除しました。';
   statusMessage.dataset.state = 'success';
