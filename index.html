@@ -20,610 +20,652 @@
           本フォームは理学療法士が生活機能や身体状況を把握し、必要に応じて医療機関受診を勧奨するための情報整理を目的としています。
         </p>
       </header>
-      <main>
-        <form id="questionnaireForm" class="card" autocomplete="on">
-          <section>
-            <h2>基本情報</h2>
-            <div class="grid">
-              <label>
-                氏名
-                <input type="text" name="name" placeholder="例：山田 太郎" required />
-              </label>
-              <label>
-                ふりがな
-                <input type="text" name="name_kana" placeholder="例：やまだ たろう" />
-              </label>
-              <label>
-                生年月日
-                <input type="date" name="birthdate" />
-              </label>
-              <label>
-                年齢
-                <input type="number" name="age" min="0" max="120" />
-              </label>
-              <label>
-                性別
-                <select name="sex" required>
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="男性">男性</option>
-                  <option value="女性">女性</option>
-                  <option value="その他">その他</option>
-                  <option value="回答しない">回答しない</option>
-                </select>
-              </label>
-              <label>
-                介護度
-                <select name="care_level" required>
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="自立">自立</option>
-                  <option value="要支援1">要支援1</option>
-                  <option value="要支援2">要支援2</option>
-                  <option value="要介護1">要介護1</option>
-                  <option value="要介護2">要介護2</option>
-                  <option value="要介護3">要介護3</option>
-                  <option value="要介護4">要介護4</option>
-                  <option value="要介護5">要介護5</option>
-                </select>
-              </label>
-              <label class="wide">
-                同居家族・支援者
-                <input type="text" name="household" placeholder="例：妻・長女（週1回支援）" />
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>相談・支援の目的</h2>
-            <div class="grid">
-              <label class="wide">
-                現在困っていること・気になる症状
-                <textarea name="current_issues" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                受診勧奨を検討している症状・事柄
-                <textarea name="target_symptoms" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                支援のきっかけ
-                <select name="support_trigger">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="他職種からの紹介">他職種からの紹介</option>
-                  <option value="本人・家族からの相談">本人・家族からの相談</option>
-                  <option value="地域包括支援センター等からの依頼">地域包括支援センター等からの依頼</option>
-                  <option value="その他">その他</option>
-                </select>
-              </label>
-              <label class="wide" data-conditional="support_trigger:その他">
-                その他（支援のきっかけ）
-                <input type="text" name="support_trigger_other" />
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>既往歴・医療関連情報</h2>
-            <div class="grid">
-              <label class="wide">
-                診断されている疾患・障害
-                <textarea name="diagnoses" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                主治医・かかりつけ医
-                <input type="text" name="primary_physician" />
-              </label>
-              <label class="wide">
-                入院歴・手術歴
-                <textarea name="hospital_history" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                慢性疾患の管理状況
-                <textarea name="chronic_management" rows="3"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>服薬・アレルギー情報</h2>
-            <div class="grid">
-              <label class="wide">
-                現在服用している薬剤（処方薬・市販薬・サプリメント）
-                <textarea name="current_medications" rows="3"></textarea>
-              </label>
-              <label>
-                服薬管理
-                <select name="medication_management">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="本人">本人</option>
-                  <option value="家族">家族</option>
-                  <option value="その他">その他</option>
-                </select>
-              </label>
-              <label data-conditional="medication_management:その他">
-                その他（服薬管理）
-                <input type="text" name="medication_management_other" />
-              </label>
-              <label class="wide">
-                アレルギー・副作用歴
-                <textarea name="allergies" rows="3"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>健診・検診受診状況</h2>
-            <div class="grid">
-              <label>
-                一般健診（過去1年）
-                <select name="general_checkup" required>
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="受診済">受診済</option>
-                  <option value="未受診">未受診</option>
-                </select>
-              </label>
-              <label data-conditional="general_checkup:受診済">
-                一般健診の実施日
-                <input type="date" name="general_checkup_date" />
-              </label>
-              <label>
-                特殊健診・特定保健指導（過去1年）
-                <select name="special_checkup">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="受診済">受診済</option>
-                  <option value="未受診">未受診</option>
-                </select>
-              </label>
-              <label data-conditional="special_checkup:受診済" class="wide">
-                種類・実施日
-                <input type="text" name="special_checkup_detail" placeholder="例：粉じん健診／2024-04-10" />
-              </label>
-              <label class="wide">
-                健診結果の指摘事項
-                <textarea name="checkup_findings" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                未受診の場合の理由
-                <textarea name="checkup_reason" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>医療機関受診状況</h2>
-            <div class="grid">
-              <label class="wide">
-                現在受診中の医療機関・診療科
-                <textarea name="current_medical_facilities" rows="3"></textarea>
-              </label>
-              <label>
-                最終受診日
-                <input type="date" name="last_visit_date" />
-              </label>
-              <label class="wide">
-                医療機関からの指示・注意事項
-                <textarea name="medical_instructions" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                症状悪化時の連絡先・対応
-                <textarea name="worsening_plan" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>転倒・転倒リスクサーベイ</h2>
-            <div class="grid">
-              <fieldset class="schema-group">
-                <legend>3KQ：転倒リスクの3つのキークエスチョン</legend>
-                <p class="schema-note">
-                  CDC STEADI プログラムで推奨される3KQ（Three Key Questions）をもとに、転倒リスクを簡易スクリーニングします。
-                </p>
-                <div class="schema-grid" role="group" aria-label="3KQ">
-                  <div class="schema-item">
-                    <p>過去1年の間に転倒したことがありますか？</p>
-                    <div class="option-row">
-                      <label class="chip">
-                        <input type="radio" name="3kq_fall_history" value="はい" required />
-                        <span>はい</span>
-                      </label>
-                      <label class="chip">
-                        <input type="radio" name="3kq_fall_history" value="いいえ" />
-                        <span>いいえ</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="schema-item">
-                    <p>歩いたり立っている時に不安定だと感じますか？</p>
-                    <div class="option-row">
-                      <label class="chip">
-                        <input type="radio" name="3kq_unsteady" value="はい" required />
-                        <span>はい</span>
-                      </label>
-                      <label class="chip">
-                        <input type="radio" name="3kq_unsteady" value="いいえ" />
-                        <span>いいえ</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="schema-item">
-                    <p>転倒することが心配ですか？</p>
-                    <div class="option-row">
-                      <label class="chip">
-                        <input type="radio" name="3kq_fear" value="はい" required />
-                        <span>はい</span>
-                      </label>
-                      <label class="chip">
-                        <input type="radio" name="3kq_fear" value="いいえ" />
-                        <span>いいえ</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <label data-conditional="3kq_fall_history:はい,3kq_unsteady:はい,3kq_fear:はい">
-                  3KQで「はい」と答えた項目の具体的な状況
-                  <textarea name="3kq_detail" rows="2" placeholder="例：夜間トイレに行く際に転倒／杖なしではふらつく など"></textarea>
-                </label>
-              </fieldset>
-              <label>
-                過去1年の転倒回数
-                <input type="number" name="fall_count" min="0" />
-              </label>
-              <label>
-                転倒による受診・けが
-                <select name="fall_injury">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="なし">なし</option>
-                  <option value="あり">あり</option>
-                </select>
-              </label>
-              <label data-conditional="fall_injury:あり" class="wide">
-                受診内容・けがの状況
-                <textarea name="fall_injury_detail" rows="2"></textarea>
-              </label>
-              <label>
-                転倒への不安
-                <select name="fall_fear">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="なし">なし</option>
-                  <option value="少しある">少しある</option>
-                  <option value="強くある">強くある</option>
-                </select>
-              </label>
-              <label>
-                屋内移動への自信（0〜10）
-                <div class="range-wrapper">
-                  <input type="range" name="indoor_confidence" min="0" max="10" value="5" data-output="indoor_confidence_output" />
-                  <output id="indoor_confidence_output">5</output>
-                </div>
-              </label>
-              <label>
-                屋外移動への自信（0〜10）
-                <div class="range-wrapper">
-                  <input type="range" name="outdoor_confidence" min="0" max="10" value="5" data-output="outdoor_confidence_output" />
-                  <output id="outdoor_confidence_output">5</output>
-                </div>
-              </label>
-              <label class="wide">
-                歩行補助具・介護用具
-                <textarea name="assistive_devices" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                転倒予防の取組
-                <textarea name="fall_prevention" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>生活機能・活動状況</h2>
-            <div class="grid">
-              <label>
-                日常生活動作（ADL）
-                <select name="adl_status">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="自立">自立</option>
-                  <option value="一部介助">一部介助</option>
-                  <option value="全介助">全介助</option>
-                </select>
-              </label>
-              <label>
-                手段的日常生活動作（IADL）
-                <select name="iadl_status">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="自立">自立</option>
-                  <option value="一部介助">一部介助</option>
-                  <option value="全介助">全介助</option>
-                </select>
-              </label>
-              <label class="wide">
-                社会参加・役割
-                <textarea name="social_participation" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                睡眠の状況
-                <textarea name="sleep_quality" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                食生活の特徴
-                <textarea name="nutrition" rows="2"></textarea>
-              </label>
-              <label>
-                水分摂取量（目安）
-                <select name="hydration">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="1L未満">1L未満</option>
-                  <option value="1〜1.5L">1〜1.5L</option>
-                  <option value="1.5〜2L">1.5〜2L</option>
-                  <option value="2L以上">2L以上</option>
-                </select>
-              </label>
-              <label>
-                排泄状況
-                <select name="elimination">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="問題なし">問題なし</option>
-                  <option value="便秘傾向">便秘傾向</option>
-                  <option value="尿失禁・頻尿">尿失禁・頻尿</option>
-                  <option value="その他">その他</option>
-                </select>
-              </label>
-              <label data-conditional="elimination:その他" class="wide">
-                その他（排泄状況）
-                <input type="text" name="elimination_other" />
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>身体機能・痛みの評価</h2>
-            <div class="grid">
-              <label>
-                痛み（0〜10）
-                <div class="range-wrapper">
-                  <input type="range" name="pain_scale" min="0" max="10" value="0" data-output="pain_scale_output" />
-                  <output id="pain_scale_output">0</output>
-                </div>
-              </label>
-              <label class="wide">
-                痛みの部位やタイミング
-                <textarea name="pain_detail" rows="2"></textarea>
-              </label>
-              <fieldset class="schema-group wide">
-                <legend>しびれ・感覚障害の部位</legend>
-                <p class="schema-note">
-                  感覚障害が出現する部位をボディスキーマから選択してください。複数選択できます。
-                </p>
-                <div class="schema-grid" role="group" aria-label="しびれ・感覚障害の部位">
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="頭部・顔面" />
-                    <span>頭部・顔面</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="頸部" />
-                    <span>頸部</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="肩・上腕（右）" />
-                    <span>肩・上腕（右）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="肩・上腕（左）" />
-                    <span>肩・上腕（左）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="前腕・手（右）" />
-                    <span>前腕・手（右）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="前腕・手（左）" />
-                    <span>前腕・手（左）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="体幹（胸・背中）" />
-                    <span>体幹（胸・背中）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="体幹（腰・骨盤）" />
-                    <span>体幹（腰・骨盤）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="股関節・大腿（右）" />
-                    <span>股関節・大腿（右）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="股関節・大腿（左）" />
-                    <span>股関節・大腿（左）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="下腿・足（右）" />
-                    <span>下腿・足（右）</span>
-                  </label>
-                  <label class="chip">
-                    <input type="checkbox" name="sensory_regions" value="下腿・足（左）" />
-                    <span>下腿・足（左）</span>
-                  </label>
-                </div>
-                <label>
-                  感覚障害の詳細・誘因
-                  <textarea name="sensory_detail" rows="2" placeholder="例：朝の起床時に右手がしびれる／L4領域に灼熱感 など"></textarea>
-                </label>
-              </fieldset>
-              <label class="wide">
-                関節可動域・筋力低下の自覚
-                <textarea name="mobility_strength" rows="2"></textarea>
-              </label>
-              <label>
-                身長（cm）
-                <input type="number" name="height_cm" min="50" max="220" step="0.1" />
-              </label>
-              <label>
-                体重（kg）
-                <input type="number" name="weight_kg" min="20" max="200" step="0.1" />
-              </label>
-              <label>
-                BMI
-                <input type="number" name="bmi" min="10" max="60" step="0.1" />
-              </label>
-              <label>
-                半年以内の体重変化
-                <select name="weight_change">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="変化なし">変化なし</option>
-                  <option value="増加傾向">増加傾向</option>
-                  <option value="減少傾向">減少傾向</option>
-                </select>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>運動・身体活動習慣（厚生労働省基準を参考）</h2>
-            <p class="section-note">
-              厚生労働省「健康づくりのための身体活動基準2013」を参考に、週150分以上の中等度の身体活動または75分以上の高強度運動を目指します。
-            </p>
-            <div class="grid">
-              <label>
-                定期的な運動習慣
-                <select name="regular_exercise">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="なし">なし</option>
-                  <option value="あり（週1〜2回）">あり（週1〜2回）</option>
-                  <option value="あり（週3回以上）">あり（週3回以上）</option>
-                </select>
-              </label>
-              <label class="wide" data-conditional="regular_exercise:なし">
-                運動を行えない・行わない理由
-                <textarea name="exercise_barriers" rows="2"></textarea>
-              </label>
-              <label class="wide" data-conditional="regular_exercise:あり（週1〜2回）,regular_exercise:あり（週3回以上)">
-                運動の内容・頻度
-                <textarea name="exercise_detail" rows="2"></textarea>
-              </label>
-              <label>
-                1日の平均歩数
-                <select name="daily_steps">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="〜3,000歩">〜3,000歩</option>
-                  <option value="3,001〜6,000歩">3,001〜6,000歩</option>
-                  <option value="6,001〜8,000歩">6,001〜8,000歩</option>
-                  <option value="8,001歩以上">8,001歩以上</option>
-                </select>
-              </label>
-              <label>
-                身体活動強度の目安
-                <select name="activity_intensity">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="1日60分未満の中等度活動">1日60分未満の中等度活動</option>
-                  <option value="1日60分以上の中等度活動">1日60分以上の中等度活動</option>
-                  <option value="週75分未満の高強度運動">週75分未満の高強度運動</option>
-                  <option value="週75分以上の高強度運動">週75分以上の高強度運動</option>
-                  <option value="中高強度の組み合わせで推奨基準達成">中高強度の組み合わせで推奨基準達成</option>
-                </select>
-              </label>
-              <label>
-                仕事・家事での身体負荷
-                <select name="workload">
-                  <option value="" disabled selected>選択してください</option>
-                  <option value="軽度（主に座位）">軽度（主に座位）</option>
-                  <option value="中等度（立位・歩行が多い）">中等度（立位・歩行が多い）</option>
-                  <option value="高負荷（力仕事が多い）">高負荷（力仕事が多い）</option>
-                </select>
-              </label>
-              <label class="wide">
-                休養・セルフケア
-                <textarea name="recovery" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>環境・支援体制</h2>
-            <div class="grid">
-              <label class="wide">
-                居住環境（段差・手すり等）
-                <textarea name="living_environment" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                利用中の支援サービス
-                <textarea name="support_services" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                家族・地域からの支援体制
-                <textarea name="community_support" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                福祉用具・住宅改修の希望
-                <textarea name="welfare_needs" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>精神・心理状態</h2>
-            <div class="grid">
-              <label class="wide">
-                気分の変化やストレス
-                <textarea name="mood_changes" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                睡眠障害・不安・抑うつ症状
-                <textarea name="mental_symptoms" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                カウンセリング・精神科受診歴
-                <textarea name="mental_health_history" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                意欲や活動意欲の変化
-                <textarea name="motivation" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>理学療法士所見・連携メモ</h2>
-            <div class="grid">
-              <label class="wide">
-                姿勢・歩行・バランスの所見
-                <textarea name="pt_observations" rows="3"></textarea>
-              </label>
-              <label class="wide">
-                バイタルサイン（測定値）
-                <textarea name="vital_signs" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                受診が望ましい理由
-                <textarea name="referral_reason" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                連携が必要と考える職種・機関
-                <textarea name="collaboration_targets" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                本人・家族への説明内容と反応
-                <textarea name="family_feedback" rows="2"></textarea>
-              </label>
-              <label class="wide">
-                その他共有したいこと
-                <textarea name="additional_notes" rows="2"></textarea>
-              </label>
-            </div>
-          </section>
-
-          <section>
-            <h2>同意確認</h2>
-            <label class="checkbox">
-              <input type="checkbox" name="consent" value="同意済" required />
-              <span>本フォームで収集した情報を受診勧奨および支援調整の目的に使用することに同意します。</span>
-            </label>
-          </section>
-
-          <div class="actions">
-            <button type="submit" class="primary-button">Googleスプレッドシートに送信</button>
-            <p id="statusMessage" role="status" aria-live="polite"></p>
+      <div class="layout">
+        <aside class="sidebar" aria-label="フォームナビゲーション">
+          <div class="sidebar-card">
+            <h2>セクションナビ</h2>
+            <ol id="sectionNav" class="section-nav" aria-label="フォームセクション一覧"></ol>
           </div>
-        </form>
-      </main>
+          <div class="sidebar-card">
+            <h2>入力進捗</h2>
+            <progress id="formProgress" max="100" value="0" aria-describedby="progressValue"></progress>
+            <p id="progressValue" class="progress-value">0% 完了（必須項目）</p>
+            <p class="progress-note">必須項目の入力状況をリアルタイムに表示します。</p>
+          </div>
+          <div class="sidebar-card sidebar-note">
+            <h2>保存と管理</h2>
+            <p>
+              入力内容はブラウザに自動保存されます。共有端末をご利用の際は送信後に保存データをクリアしてください。
+            </p>
+            <button type="button" id="clearStorage" class="ghost-button">保存データを削除</button>
+            <p id="lastSaved" class="last-saved" aria-live="polite"></p>
+          </div>
+        </aside>
+        <main>
+          <form id="questionnaireForm" class="card" autocomplete="on">
+            <section data-section>
+              <h2>基本情報</h2>
+              <div class="grid">
+                <label>
+                  氏名
+                  <input type="text" name="name" placeholder="例：山田 太郎" required />
+                </label>
+                <label>
+                  ふりがな
+                  <input type="text" name="name_kana" placeholder="例：やまだ たろう" />
+                </label>
+                <label>
+                  生年月日
+                  <input type="date" name="birthdate" />
+                </label>
+                <label>
+                  年齢
+                  <input type="number" name="age" min="0" max="120" />
+                </label>
+                <label>
+                  性別
+                  <select name="sex" required>
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="男性">男性</option>
+                    <option value="女性">女性</option>
+                    <option value="その他">その他</option>
+                    <option value="回答しない">回答しない</option>
+                  </select>
+                </label>
+                <label>
+                  介護度
+                  <select name="care_level" required>
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="自立">自立</option>
+                    <option value="要支援1">要支援1</option>
+                    <option value="要支援2">要支援2</option>
+                    <option value="要介護1">要介護1</option>
+                    <option value="要介護2">要介護2</option>
+                    <option value="要介護3">要介護3</option>
+                    <option value="要介護4">要介護4</option>
+                    <option value="要介護5">要介護5</option>
+                  </select>
+                </label>
+                <label class="wide">
+                  同居家族・支援者
+                  <input type="text" name="household" placeholder="例：妻・長女（週1回支援）" />
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>相談・支援の目的</h2>
+              <div class="grid">
+                <label class="wide">
+                  現在困っていること・気になる症状
+                  <textarea name="current_issues" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  受診勧奨を検討している症状・事柄
+                  <textarea name="target_symptoms" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  支援のきっかけ
+                  <select name="support_trigger">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="他職種からの紹介">他職種からの紹介</option>
+                    <option value="本人・家族からの相談">本人・家族からの相談</option>
+                    <option value="地域包括支援センター等からの依頼">地域包括支援センター等からの依頼</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </label>
+                <label class="wide" data-conditional="support_trigger:その他">
+                  その他（支援のきっかけ）
+                  <input type="text" name="support_trigger_other" />
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>既往歴・医療関連情報</h2>
+              <div class="grid">
+                <label class="wide">
+                  診断されている疾患・障害
+                  <textarea name="diagnoses" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  主治医・かかりつけ医
+                  <input type="text" name="primary_physician" />
+                </label>
+                <label class="wide">
+                  入院歴・手術歴
+                  <textarea name="hospital_history" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  慢性疾患の管理状況
+                  <textarea name="chronic_management" rows="3"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>服薬・アレルギー情報</h2>
+              <div class="grid">
+                <label class="wide">
+                  現在服用している薬剤（処方薬・市販薬・サプリメント）
+                  <textarea name="current_medications" rows="3"></textarea>
+                </label>
+                <label>
+                  服薬管理
+                  <select name="medication_management">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="本人">本人</option>
+                    <option value="家族">家族</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </label>
+                <label data-conditional="medication_management:その他">
+                  その他（服薬管理）
+                  <input type="text" name="medication_management_other" />
+                </label>
+                <label class="wide">
+                  アレルギー・副作用歴
+                  <textarea name="allergies" rows="3"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>健診・検診受診状況</h2>
+              <div class="grid">
+                <label>
+                  一般健診（過去1年）
+                  <select name="general_checkup" required>
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="受診済">受診済</option>
+                    <option value="未受診">未受診</option>
+                  </select>
+                </label>
+                <label data-conditional="general_checkup:受診済">
+                  一般健診の実施日
+                  <input type="date" name="general_checkup_date" />
+                </label>
+                <label>
+                  特殊健診・特定保健指導（過去1年）
+                  <select name="special_checkup">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="受診済">受診済</option>
+                    <option value="未受診">未受診</option>
+                  </select>
+                </label>
+                <label data-conditional="special_checkup:受診済" class="wide">
+                  種類・実施日
+                  <input type="text" name="special_checkup_detail" placeholder="例：粉じん健診／2024-04-10" />
+                </label>
+                <label class="wide">
+                  健診結果の指摘事項
+                  <textarea name="checkup_findings" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  未受診の場合の理由
+                  <textarea name="checkup_reason" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>医療機関受診状況</h2>
+              <div class="grid">
+                <label class="wide">
+                  現在受診中の医療機関・診療科
+                  <textarea name="current_medical_facilities" rows="3"></textarea>
+                </label>
+                <label>
+                  最終受診日
+                  <input type="date" name="last_visit_date" />
+                </label>
+                <label class="wide">
+                  医療機関からの指示・注意事項
+                  <textarea name="medical_instructions" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  症状悪化時の連絡先・対応
+                  <textarea name="worsening_plan" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>転倒・転倒リスクサーベイ</h2>
+              <div class="grid">
+                <fieldset class="schema-group">
+                  <legend>3KQ：転倒リスクの3つのキークエスチョン</legend>
+                  <p class="schema-note">
+                    CDC STEADI プログラムで推奨される3KQ（Three Key Questions）をもとに、転倒リスクを簡易スクリーニングします。
+                  </p>
+                  <div class="schema-grid" role="group" aria-label="3KQ">
+                    <div class="schema-item">
+                      <p>過去1年の間に転倒したことがありますか？</p>
+                      <div class="option-row">
+                        <label class="chip">
+                          <input type="radio" name="3kq_fall_history" value="はい" required />
+                          <span>はい</span>
+                        </label>
+                        <label class="chip">
+                          <input type="radio" name="3kq_fall_history" value="いいえ" />
+                          <span>いいえ</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="schema-item">
+                      <p>歩いたり立っている時に不安定だと感じますか？</p>
+                      <div class="option-row">
+                        <label class="chip">
+                          <input type="radio" name="3kq_unsteady" value="はい" required />
+                          <span>はい</span>
+                        </label>
+                        <label class="chip">
+                          <input type="radio" name="3kq_unsteady" value="いいえ" />
+                          <span>いいえ</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="schema-item">
+                      <p>転倒することが心配ですか？</p>
+                      <div class="option-row">
+                        <label class="chip">
+                          <input type="radio" name="3kq_fear" value="はい" required />
+                          <span>はい</span>
+                        </label>
+                        <label class="chip">
+                          <input type="radio" name="3kq_fear" value="いいえ" />
+                          <span>いいえ</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <label data-conditional="3kq_fall_history:はい,3kq_unsteady:はい,3kq_fear:はい">
+                    3KQで「はい」と答えた項目の具体的な状況
+                    <textarea
+                      name="3kq_detail"
+                      rows="2"
+                      placeholder="例：夜間トイレに行く際に転倒／杖なしではふらつく など"
+                    ></textarea>
+                  </label>
+                </fieldset>
+                <label>
+                  過去1年の転倒回数
+                  <input type="number" name="fall_count" min="0" />
+                </label>
+                <label>
+                  転倒による受診・けが
+                  <select name="fall_injury">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="なし">なし</option>
+                    <option value="あり">あり</option>
+                  </select>
+                </label>
+                <label data-conditional="fall_injury:あり" class="wide">
+                  受診内容・けがの状況
+                  <textarea name="fall_injury_detail" rows="2"></textarea>
+                </label>
+                <label>
+                  転倒への不安
+                  <select name="fall_fear">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="なし">なし</option>
+                    <option value="少しある">少しある</option>
+                    <option value="強くある">強くある</option>
+                  </select>
+                </label>
+                <label>
+                  屋内移動への自信（0〜10）
+                  <div class="range-wrapper">
+                    <input type="range" name="indoor_confidence" min="0" max="10" value="5" data-output="indoor_confidence_output" />
+                    <output id="indoor_confidence_output">5</output>
+                  </div>
+                </label>
+                <label>
+                  屋外移動への自信（0〜10）
+                  <div class="range-wrapper">
+                    <input type="range" name="outdoor_confidence" min="0" max="10" value="5" data-output="outdoor_confidence_output" />
+                    <output id="outdoor_confidence_output">5</output>
+                  </div>
+                </label>
+                <label class="wide">
+                  歩行補助具・介護用具
+                  <textarea name="assistive_devices" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  転倒予防の取組
+                  <textarea name="fall_prevention" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>生活機能・活動状況</h2>
+              <div class="grid">
+                <label>
+                  日常生活動作（ADL）
+                  <select name="adl_status">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="自立">自立</option>
+                    <option value="一部介助">一部介助</option>
+                    <option value="全介助">全介助</option>
+                  </select>
+                </label>
+                <label>
+                  手段的日常生活動作（IADL）
+                  <select name="iadl_status">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="自立">自立</option>
+                    <option value="一部介助">一部介助</option>
+                    <option value="全介助">全介助</option>
+                  </select>
+                </label>
+                <label class="wide">
+                  社会参加・役割
+                  <textarea name="social_participation" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  睡眠の状況
+                  <textarea name="sleep_quality" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  食生活の特徴
+                  <textarea name="nutrition" rows="2"></textarea>
+                </label>
+                <label>
+                  水分摂取量（目安）
+                  <select name="hydration">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="1L未満">1L未満</option>
+                    <option value="1〜1.5L">1〜1.5L</option>
+                    <option value="1.5〜2L">1.5〜2L</option>
+                    <option value="2L以上">2L以上</option>
+                  </select>
+                </label>
+                <label>
+                  排泄状況
+                  <select name="elimination">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="問題なし">問題なし</option>
+                    <option value="便秘傾向">便秘傾向</option>
+                    <option value="尿失禁・頻尿">尿失禁・頻尿</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </label>
+                <label data-conditional="elimination:その他" class="wide">
+                  その他（排泄状況）
+                  <input type="text" name="elimination_other" />
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>身体機能・痛みの評価</h2>
+              <div class="grid">
+                <label>
+                  痛み（0〜10）
+                  <div class="range-wrapper">
+                    <input type="range" name="pain_scale" min="0" max="10" value="0" data-output="pain_scale_output" />
+                    <output id="pain_scale_output">0</output>
+                  </div>
+                </label>
+                <label class="wide">
+                  痛みの部位やタイミング
+                  <textarea name="pain_detail" rows="2"></textarea>
+                </label>
+                <fieldset class="schema-group wide">
+                  <legend>しびれ・感覚障害の部位</legend>
+                  <p class="schema-note">
+                    感覚障害が出現する部位をボディスキーマから選択してください。複数選択できます。
+                  </p>
+                  <div class="schema-grid" role="group" aria-label="しびれ・感覚障害の部位">
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="頭部・顔面" />
+                      <span>頭部・顔面</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="頸部" />
+                      <span>頸部</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="肩・上腕（右）" />
+                      <span>肩・上腕（右）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="肩・上腕（左）" />
+                      <span>肩・上腕（左）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="前腕・手（右）" />
+                      <span>前腕・手（右）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="前腕・手（左）" />
+                      <span>前腕・手（左）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="体幹（胸・背中）" />
+                      <span>体幹（胸・背中）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="体幹（腰・骨盤）" />
+                      <span>体幹（腰・骨盤）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="股関節・大腿（右）" />
+                      <span>股関節・大腿（右）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="股関節・大腿（左）" />
+                      <span>股関節・大腿（左）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="下腿・足（右）" />
+                      <span>下腿・足（右）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="sensory_regions" value="下腿・足（左）" />
+                      <span>下腿・足（左）</span>
+                    </label>
+                  </div>
+                  <label>
+                    感覚障害の詳細・誘因
+                    <textarea name="sensory_detail" rows="2" placeholder="例：朝の起床時に右手がしびれる／L4領域に灼熱感 など"></textarea>
+                  </label>
+                </fieldset>
+                <label class="wide">
+                  関節可動域・筋力低下の自覚
+                  <textarea name="mobility_strength" rows="2"></textarea>
+                </label>
+                <label>
+                  身長（cm）
+                  <input type="number" name="height_cm" min="50" max="220" step="0.1" />
+                </label>
+                <label>
+                  体重（kg）
+                  <input type="number" name="weight_kg" min="20" max="200" step="0.1" />
+                </label>
+                <label>
+                  BMI
+                  <input type="number" name="bmi" min="10" max="60" step="0.1" />
+                </label>
+                <label>
+                  半年以内の体重変化
+                  <select name="weight_change">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="変化なし">変化なし</option>
+                    <option value="増加傾向">増加傾向</option>
+                    <option value="減少傾向">減少傾向</option>
+                  </select>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>運動・身体活動習慣（厚生労働省基準を参考）</h2>
+              <p class="section-note">
+                厚生労働省「健康づくりのための身体活動基準2013」を参考に、週150分以上の中等度の身体活動または75分以上の高強度運動を目指します。
+              </p>
+              <div class="grid">
+                <label>
+                  定期的な運動習慣
+                  <select name="regular_exercise">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="なし">なし</option>
+                    <option value="あり（週1〜2回）">あり（週1〜2回）</option>
+                    <option value="あり（週3回以上）">あり（週3回以上）</option>
+                  </select>
+                </label>
+                <label class="wide" data-conditional="regular_exercise:なし">
+                  運動を行えない・行わない理由
+                  <textarea name="exercise_barriers" rows="2"></textarea>
+                </label>
+                <label class="wide" data-conditional="regular_exercise:あり（週1〜2回）,regular_exercise:あり（週3回以上)">
+                  運動の内容・頻度
+                  <textarea name="exercise_detail" rows="2"></textarea>
+                </label>
+                <label>
+                  1日の平均歩数
+                  <select name="daily_steps">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="〜3,000歩">〜3,000歩</option>
+                    <option value="3,001〜6,000歩">3,001〜6,000歩</option>
+                    <option value="6,001〜8,000歩">6,001〜8,000歩</option>
+                    <option value="8,001歩以上">8,001歩以上</option>
+                  </select>
+                </label>
+                <label>
+                  身体活動強度の目安
+                  <select name="activity_intensity">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="1日60分未満の中等度活動">1日60分未満の中等度活動</option>
+                    <option value="1日60分以上の中等度活動">1日60分以上の中等度活動</option>
+                    <option value="週75分未満の高強度運動">週75分未満の高強度運動</option>
+                    <option value="週75分以上の高強度運動">週75分以上の高強度運動</option>
+                    <option value="中高強度の組み合わせで推奨基準達成">中高強度の組み合わせで推奨基準達成</option>
+                  </select>
+                </label>
+                <label>
+                  仕事・家事での身体負荷
+                  <select name="workload">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="軽度（主に座位）">軽度（主に座位）</option>
+                    <option value="中等度（立位・歩行が多い）">中等度（立位・歩行が多い）</option>
+                    <option value="高負荷（力仕事が多い）">高負荷（力仕事が多い）</option>
+                  </select>
+                </label>
+                <label class="wide">
+                  休養・セルフケア
+                  <textarea name="recovery" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>環境・支援体制</h2>
+              <div class="grid">
+                <label class="wide">
+                  居住環境（段差・手すり等）
+                  <textarea name="living_environment" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  利用中の支援サービス
+                  <textarea name="support_services" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  家族・地域からの支援体制
+                  <textarea name="community_support" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  福祉用具・住宅改修の希望
+                  <textarea name="welfare_needs" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>精神・心理状態</h2>
+              <div class="grid">
+                <label class="wide">
+                  気分の変化やストレス
+                  <textarea name="mood_changes" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  睡眠障害・不安・抑うつ症状
+                  <textarea name="mental_symptoms" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  カウンセリング・精神科受診歴
+                  <textarea name="mental_health_history" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  意欲や活動欲の変化
+                  <textarea name="motivation" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>理学療法士所見・連携メモ</h2>
+              <div class="grid">
+                <label class="wide">
+                  姿勢・歩行・バランスの所見
+                  <textarea name="pt_observations" rows="3"></textarea>
+                </label>
+                <label class="wide">
+                  バイタルサイン（測定値）
+                  <textarea name="vital_signs" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  受診が望ましい理由
+                  <textarea name="referral_reason" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  連携が必要と考える職種・機関
+                  <textarea name="collaboration_targets" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  本人・家族への説明内容と反応
+                  <textarea name="family_feedback" rows="2"></textarea>
+                </label>
+                <label class="wide">
+                  その他共有したいこと
+                  <textarea name="additional_notes" rows="2"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section data-section>
+              <h2>同意確認</h2>
+              <label class="checkbox">
+                <input type="checkbox" name="consent" value="同意済" required />
+                <span>本フォームで収集した情報を受診勧奨および支援調整の目的に使用することに同意します。</span>
+              </label>
+            </section>
+
+            <div class="actions">
+              <button type="button" id="previewButton" class="ghost-button">入力内容をプレビュー</button>
+              <button type="submit" class="primary-button">Googleスプレッドシートに送信</button>
+              <p id="statusMessage" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </main>
+      </div>
     </div>
-    <script src="script.js"></script>
+
+    <div id="previewModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal__overlay" data-close-preview></div>
+      <div class="modal__content" role="document">
+        <button type="button" class="modal__close" id="closePreview" aria-label="プレビューを閉じる">×</button>
+        <h2>入力内容プレビュー</h2>
+        <p class="modal-note">送信前に内容をご確認ください。内容はブラウザに保存されています。</p>
+        <div id="previewContent" class="preview-content" aria-live="polite"></div>
+        <div class="modal-actions">
+          <button type="button" class="ghost-button" id="closePreviewFooter">閉じる</button>
+          <button type="submit" form="questionnaireForm" class="primary-button">この内容で送信</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js" type="module"></script>
   </body>
 </html>
