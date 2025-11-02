@@ -12,7 +12,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-apps-script-url="">
+  <body data-apps-script-url="https://script.google.com/macros/s/AKfycbw0JJSqhI68gud8S8jAV9EJxCPcIWfLoVlIGMl4_hTsJ3J7fYkrWJwKQ90McutIBUIJ-A/exec">
     <div class="page">
       <header class="header">
         <h1>理学療法士による受診勧奨サポート問診フォーム</h1>
@@ -281,10 +281,6 @@
                     <option value="未受診">未受診</option>
                   </select>
                 </label>
-                <label data-conditional="general_checkup:受診済">
-                  実施日
-                  <input type="date" name="general_checkup_date" />
-                </label>
                 <label>
                   特定健診・特定保健指導（過去1年）
                   <select name="specific_checkup">
@@ -292,10 +288,6 @@
                     <option value="受診済">受診済</option>
                     <option value="未受診">未受診</option>
                   </select>
-                </label>
-                <label data-conditional="specific_checkup:受診済">
-                  実施日
-                  <input type="date" name="specific_checkup_date" />
                 </label>
                 <label class="wide" data-conditional="general_checkup:未受診,specific_checkup:未受診">
                   受診できていない理由や予定
@@ -312,10 +304,7 @@
               <h2>転倒に関する質問</h2>
               <div class="grid">
                 <fieldset class="schema-group">
-                  <legend>3KQ：転倒リスクの3つのキークエスチョン</legend>
-                  <p class="schema-note">
-                    CDC STEADI プログラムで推奨される3KQ（Three Key Questions）をもとに、転倒リスクを簡易スクリーニングします。
-                  </p>
+                  <legend>3つの転倒リスク質問</legend>
                   <div class="schema-grid" role="group" aria-label="3KQ">
                     <div class="schema-item">
                       <p>過去1年の間に転倒したことがありますか？</p>
@@ -421,135 +410,79 @@
             </section>
 
             <section data-section>
-              <h2>生活習慣（睡眠・食事）</h2>
-              <div class="grid">
-                <label>
-                  睡眠のようす
-                  <select name="sleep_quality">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="熟睡できている">熟睡できている</option>
-                    <option value="寝つきが悪い">寝つきが悪い</option>
-                    <option value="途中で目が覚める">途中で目が覚める</option>
-                    <option value="早朝に目が覚める">早朝に目が覚める</option>
-                    <option value="日中に眠気が強い">日中に眠気が強い</option>
-                  </select>
-                </label>
-                <label class="wide" data-conditional="sleep_quality:寝つきが悪い,sleep_quality:途中で目が覚める,sleep_quality:早朝に目が覚める,sleep_quality:日中に眠気が強い">
-                  睡眠について補足があれば記載してください
-                  <textarea name="sleep_detail" rows="2"></textarea>
-                </label>
-                <label>
-                  食事のようす
-                  <select name="nutrition">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="1日3食とれている">1日3食とれている</option>
-                    <option value="食事量が少ない">食事量が少ない</option>
-                    <option value="偏食がある">偏食がある</option>
-                    <option value="むせ込みが気になる">むせ込みが気になる</option>
-                    <option value="食欲がない">食欲がない</option>
-                  </select>
-                </label>
-                <label class="wide" data-conditional="nutrition:食事量が少ない,nutrition:偏食がある,nutrition:むせ込みが気になる,nutrition:食欲がない">
-                  食生活について補足があれば記載してください
-                  <textarea name="nutrition_detail" rows="2"></textarea>
-                </label>
-                <label>
-                  1日の水分量の目安
-                  <select name="hydration">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="1L未満">1L未満</option>
-                    <option value="1〜1.5L">1〜1.5L</option>
-                    <option value="1.5〜2L">1.5〜2L</option>
-                    <option value="2L以上">2L以上</option>
-                  </select>
-                </label>
-              </div>
-              <div class="section-controls">
-                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
-                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>しびれ・感覚の気になる部位</h2>
+              <h2>しびれ・痛みなど気になる部位</h2>
               <div class="grid">
                 <div class="body-map-card">
                   <h3 class="body-map-card__title">ボディマップで部位を選択</h3>
-                  <p class="field-hint" id="bodyMapHint">タップまたはクリックで左右別に選択できます。再度押すと解除されます。</p>
+                  <p class="field-hint" id="bodyMapHint">
+                    図の左側は利用者の右側（R）、右側は利用者の左側（L）です。気になる部位をタップすると選択でき、再度タップで解除できます。
+                  </p>
                   <div class="body-map" data-body-map aria-describedby="bodyMapHint">
                     <div class="body-map__figures">
                       <div class="body-map__figure-wrapper" data-figure="front">
+                        <p class="body-map__label" aria-hidden="true">前面</p>
                         <svg viewBox="0 0 180 520" class="body-map__svg" aria-hidden="true" focusable="false">
                           <g class="body-map__figure">
-                            <circle cx="90" cy="52" r="38"></circle>
-                            <rect x="62" y="92" width="56" height="120" rx="26"></rect>
-                            <rect x="44" y="212" width="92" height="120" rx="40"></rect>
-                            <rect x="30" y="332" width="120" height="150" rx="50"></rect>
-                            <rect x="12" y="152" width="32" height="120" rx="16"></rect>
-                            <rect x="136" y="152" width="32" height="120" rx="16"></rect>
-                            <rect x="36" y="470" width="48" height="60" rx="20"></rect>
-                            <rect x="96" y="470" width="48" height="60" rx="20"></rect>
+                            <path
+                              d="M90 22c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35S109.3 22 90 22zm0 94c-20.4 0-37 16.6-37 37v26l-21 70c-2.6 8 2.9 16.5 11.3 16.5H59l8.5 118H52c-7.2 0-13 5.8-13 13v24c0 7.2 5.8 13 13 13h31l7.5-108h19l7.5 108h31c7.2 0 13-5.8 13-13v-24c0-7.2-5.8-13-13-13h-15.8L137 265h15.7c8.4 0 13.9-8.5 11.3-16.5l-21-70v-26c0-20.4-16.6-37-37-37z"
+                            ></path>
                           </g>
                         </svg>
                         <div class="body-map__areas">
-                          <button type="button" class="body-map__area" data-area="頭部（左）" style="--x:-54; --y:18;" aria-label="頭部（左）"></button>
-                          <button type="button" class="body-map__area" data-area="頭部（右）" style="--x:54; --y:18;" aria-label="頭部（右）"></button>
-                          <button type="button" class="body-map__area" data-area="首（左）" style="--x:-44; --y:94;" aria-label="首（左）"></button>
-                          <button type="button" class="body-map__area" data-area="首（右）" style="--x:44; --y:94;" aria-label="首（右）"></button>
-                          <button type="button" class="body-map__area" data-area="肩（左）" style="--x:-92; --y:130;" aria-label="肩（左）"></button>
-                          <button type="button" class="body-map__area" data-area="肩（右）" style="--x:92; --y:130;" aria-label="肩（右）"></button>
-                          <button type="button" class="body-map__area" data-area="上腕（左）" style="--x:-84; --y:170;" aria-label="上腕（左）"></button>
-                          <button type="button" class="body-map__area" data-area="上腕（右）" style="--x:84; --y:170;" aria-label="上腕（右）"></button>
-                          <button type="button" class="body-map__area" data-area="前腕・手（左）" style="--x:-88; --y:242;" aria-label="前腕・手（左）"></button>
-                          <button type="button" class="body-map__area" data-area="前腕・手（右）" style="--x:88; --y:242;" aria-label="前腕・手（右）"></button>
-                          <button type="button" class="body-map__area" data-area="体幹（前面）" style="--x:0; --y:190;" aria-label="体幹（前面）"></button>
-                          <button type="button" class="body-map__area" data-area="腰・骨盤（左）" style="--x:-54; --y:300;" aria-label="腰・骨盤（左）"></button>
-                          <button type="button" class="body-map__area" data-area="腰・骨盤（右）" style="--x:54; --y:300;" aria-label="腰・骨盤（右）"></button>
-                          <button type="button" class="body-map__area" data-area="股関節・太もも（左）" style="--x:-34; --y:348;" aria-label="股関節・太もも（左）"></button>
-                          <button type="button" class="body-map__area" data-area="股関節・太もも（右）" style="--x:34; --y:348;" aria-label="股関節・太もも（右）"></button>
-                          <button type="button" class="body-map__area" data-area="膝まわり（左）" style="--x:-30; --y:410;" aria-label="膝まわり（左）"></button>
-                          <button type="button" class="body-map__area" data-area="膝まわり（右）" style="--x:30; --y:410;" aria-label="膝まわり（右）"></button>
-                          <button type="button" class="body-map__area" data-area="ふくらはぎ（左）" style="--x:-22; --y:456;" aria-label="ふくらはぎ（左）"></button>
-                          <button type="button" class="body-map__area" data-area="ふくらはぎ（右）" style="--x:22; --y:456;" aria-label="ふくらはぎ（右）"></button>
-                          <button type="button" class="body-map__area" data-area="足首・足指（左）" style="--x:-26; --y:504;" aria-label="足首・足指（左）"></button>
-                          <button type="button" class="body-map__area" data-area="足首・足指（右）" style="--x:26; --y:504;" aria-label="足首・足指（右）"></button>
+                          <button type="button" class="body-map__area" data-area="頭部（右側）" style="--x:-52; --y:22;" aria-label="頭部（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="頭部（左側）" style="--x:52; --y:22;" aria-label="頭部（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="首（右側）" style="--x:-44; --y:98;" aria-label="首（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="首（左側）" style="--x:44; --y:98;" aria-label="首（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="肩（右側）" style="--x:-94; --y:136;" aria-label="肩（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="肩（左側）" style="--x:94; --y:136;" aria-label="肩（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="上腕（右側）" style="--x:-84; --y:180;" aria-label="上腕（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="上腕（左側）" style="--x:84; --y:180;" aria-label="上腕（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="前腕・手（右側）" style="--x:-88; --y:246;" aria-label="前腕・手（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="前腕・手（左側）" style="--x:88; --y:246;" aria-label="前腕・手（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="胸・腹部" style="--x:0; --y:200;" aria-label="胸・腹部"></button>
+                          <button type="button" class="body-map__area" data-area="腰・骨盤（右側）" style="--x:-56; --y:304;" aria-label="腰・骨盤（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="腰・骨盤（左側）" style="--x:56; --y:304;" aria-label="腰・骨盤（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="股関節・太もも（右側）" style="--x:-34; --y:352;" aria-label="股関節・太もも（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="股関節・太もも（左側）" style="--x:34; --y:352;" aria-label="股関節・太もも（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="膝まわり（右側）" style="--x:-30; --y:414;" aria-label="膝まわり（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="膝まわり（左側）" style="--x:30; --y:414;" aria-label="膝まわり（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="ふくらはぎ（右側）" style="--x:-24; --y:462;" aria-label="ふくらはぎ（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="ふくらはぎ（左側）" style="--x:24; --y:462;" aria-label="ふくらはぎ（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="足首・足指（右側）" style="--x:-26; --y:508;" aria-label="足首・足指（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="足首・足指（左側）" style="--x:26; --y:508;" aria-label="足首・足指（左側）"></button>
                         </div>
                       </div>
                       <div class="body-map__figure-wrapper" data-figure="back">
+                        <p class="body-map__label" aria-hidden="true">後面</p>
                         <svg viewBox="0 0 180 520" class="body-map__svg" aria-hidden="true" focusable="false">
                           <g class="body-map__figure">
-                            <circle cx="90" cy="52" r="38"></circle>
-                            <rect x="62" y="92" width="56" height="120" rx="26"></rect>
-                            <rect x="44" y="212" width="92" height="120" rx="40"></rect>
-                            <rect x="30" y="332" width="120" height="150" rx="50"></rect>
-                            <rect x="12" y="152" width="32" height="120" rx="16"></rect>
-                            <rect x="136" y="152" width="32" height="120" rx="16"></rect>
-                            <rect x="36" y="470" width="48" height="60" rx="20"></rect>
-                            <rect x="96" y="470" width="48" height="60" rx="20"></rect>
+                            <path
+                              d="M90 22c-19.3 0-35 15.7-35 35s15.7 35 35 35 35-15.7 35-35S109.3 22 90 22zm0 94c-20.4 0-37 16.6-37 37v30l-21 66c-2.6 8 2.7 16 11.1 16H60l7 118H49c-7.2 0-13 5.8-13 13v24c0 7.2 5.8 13 13 13h32l6-108h22l6 108h32c7.2 0 13-5.8 13-13v-24c0-7.2-5.8-13-13-13h-18l7-118h17c8.4 0 13.7-8 11.1-16l-21-66v-30c0-20.4-16.6-37-37-37z"
+                            ></path>
                           </g>
                         </svg>
                         <div class="body-map__areas">
-                          <button type="button" class="body-map__area" data-area="頭部（左）" style="--x:-54; --y:18;" aria-label="頭部（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="頭部（右）" style="--x:54; --y:18;" aria-label="頭部（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="首（左）" style="--x:-44; --y:94;" aria-label="首（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="首（右）" style="--x:44; --y:94;" aria-label="首（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="肩（左）" style="--x:-92; --y:130;" aria-label="肩（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="肩（右）" style="--x:92; --y:130;" aria-label="肩（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="上腕（左）" style="--x:-84; --y:170;" aria-label="上腕（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="上腕（右）" style="--x:84; --y:170;" aria-label="上腕（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="前腕・手（左）" style="--x:-88; --y:242;" aria-label="前腕・手（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="前腕・手（右）" style="--x:88; --y:242;" aria-label="前腕・手（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="体幹（後面）" style="--x:0; --y:190;" aria-label="体幹（後面）"></button>
-                          <button type="button" class="body-map__area" data-area="腰・骨盤（左）" style="--x:-54; --y:300;" aria-label="腰・骨盤（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="腰・骨盤（右）" style="--x:54; --y:300;" aria-label="腰・骨盤（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="股関節・太もも（左）" style="--x:-34; --y:348;" aria-label="股関節・太もも（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="股関節・太もも（右）" style="--x:34; --y:348;" aria-label="股関節・太もも（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="膝まわり（左）" style="--x:-30; --y:410;" aria-label="膝まわり（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="膝まわり（右）" style="--x:30; --y:410;" aria-label="膝まわり（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="ふくらはぎ（左）" style="--x:-22; --y:456;" aria-label="ふくらはぎ（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="ふくらはぎ（右）" style="--x:22; --y:456;" aria-label="ふくらはぎ（右・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="足首・足指（左）" style="--x:-26; --y:504;" aria-label="足首・足指（左・背面）"></button>
-                          <button type="button" class="body-map__area" data-area="足首・足指（右）" style="--x:26; --y:504;" aria-label="足首・足指（右・背面）"></button>
+                          <button type="button" class="body-map__area" data-area="頭部（右側）" style="--x:-52; --y:22;" aria-label="後頭部（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="頭部（左側）" style="--x:52; --y:22;" aria-label="後頭部（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="首（右側）" style="--x:-44; --y:98;" aria-label="うなじ（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="首（左側）" style="--x:44; --y:98;" aria-label="うなじ（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="肩（右側）" style="--x:-94; --y:140;" aria-label="肩甲部（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="肩（左側）" style="--x:94; --y:140;" aria-label="肩甲部（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="上腕（右側）" style="--x:-84; --y:184;" aria-label="上腕後面（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="上腕（左側）" style="--x:84; --y:184;" aria-label="上腕後面（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="前腕・手（右側）" style="--x:-88; --y:248;" aria-label="前腕・手（右後面）"></button>
+                          <button type="button" class="body-map__area" data-area="前腕・手（左側）" style="--x:88; --y:248;" aria-label="前腕・手（左後面）"></button>
+                          <button type="button" class="body-map__area" data-area="背中" style="--x:0; --y:206;" aria-label="背中"></button>
+                          <button type="button" class="body-map__area" data-area="腰・骨盤（右側）" style="--x:-56; --y:308;" aria-label="腰（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="腰・骨盤（左側）" style="--x:56; --y:308;" aria-label="腰（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="臀部（右側）" style="--x:-36; --y:356;" aria-label="臀部（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="臀部（左側）" style="--x:36; --y:356;" aria-label="臀部（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="膝裏（右側）" style="--x:-30; --y:418;" aria-label="膝裏（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="膝裏（左側）" style="--x:30; --y:418;" aria-label="膝裏（左側）"></button>
+                          <button type="button" class="body-map__area" data-area="ふくらはぎ（右側）" style="--x:-24; --y:466;" aria-label="ふくらはぎ（右後面）"></button>
+                          <button type="button" class="body-map__area" data-area="ふくらはぎ（左側）" style="--x:24; --y:466;" aria-label="ふくらはぎ（左後面）"></button>
+                          <button type="button" class="body-map__area" data-area="かかと・足裏（右側）" style="--x:-26; --y:510;" aria-label="かかと・足裏（右側）"></button>
+                          <button type="button" class="body-map__area" data-area="かかと・足裏（左側）" style="--x:26; --y:510;" aria-label="かかと・足裏（左側）"></button>
                         </div>
                       </div>
                     </div>
@@ -560,118 +493,164 @@
                   <legend>症状が気になる部位（複数選択可）</legend>
                   <div class="chip-grid">
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="特に気になる部位はない" data-exclusive data-body-area />
+                      <input type="checkbox" name="symptom_areas" value="特に気になる部位はない" data-exclusive data-body-area />
                       <span>特に気になる部位はない</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="頭部（左）" data-body-area />
-                      <span>頭部（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="頭部（右側）" data-body-area />
+                      <span>頭部（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="頭部（右）" data-body-area />
-                      <span>頭部（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="頭部（左側）" data-body-area />
+                      <span>頭部（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="首（左）" data-body-area />
-                      <span>首（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="首（右側）" data-body-area />
+                      <span>首（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="首（右）" data-body-area />
-                      <span>首（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="首（左側）" data-body-area />
+                      <span>首（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="肩（左）" data-body-area />
-                      <span>肩（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="肩（右側）" data-body-area />
+                      <span>肩（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="肩（右）" data-body-area />
-                      <span>肩（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="肩（左側）" data-body-area />
+                      <span>肩（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="上腕（左）" data-body-area />
-                      <span>上腕（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="上腕（右側）" data-body-area />
+                      <span>上腕（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="上腕（右）" data-body-area />
-                      <span>上腕（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="上腕（左側）" data-body-area />
+                      <span>上腕（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="前腕・手（左）" data-body-area />
-                      <span>前腕・手（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="前腕・手（右側）" data-body-area />
+                      <span>前腕・手（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="前腕・手（右）" data-body-area />
-                      <span>前腕・手（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="前腕・手（左側）" data-body-area />
+                      <span>前腕・手（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="体幹（前面）" data-body-area />
-                      <span>体幹（前面）</span>
+                      <input type="checkbox" name="symptom_areas" value="胸・腹部" data-body-area />
+                      <span>胸・腹部</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="体幹（後面）" data-body-area />
-                      <span>体幹（後面）</span>
+                      <input type="checkbox" name="symptom_areas" value="背中" data-body-area />
+                      <span>背中</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="腰・骨盤（左）" data-body-area />
-                      <span>腰・骨盤（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="腰・骨盤（右側）" data-body-area />
+                      <span>腰・骨盤（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="腰・骨盤（右）" data-body-area />
-                      <span>腰・骨盤（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="腰・骨盤（左側）" data-body-area />
+                      <span>腰・骨盤（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="股関節・太もも（左）" data-body-area />
-                      <span>股関節・太もも（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="股関節・太もも（右側）" data-body-area />
+                      <span>股関節・太もも（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="股関節・太もも（右）" data-body-area />
-                      <span>股関節・太もも（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="股関節・太もも（左側）" data-body-area />
+                      <span>股関節・太もも（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="膝まわり（左）" data-body-area />
-                      <span>膝まわり（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="膝まわり（右側）" data-body-area />
+                      <span>膝まわり（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="膝まわり（右）" data-body-area />
-                      <span>膝まわり（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="膝まわり（左側）" data-body-area />
+                      <span>膝まわり（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="ふくらはぎ（左）" data-body-area />
-                      <span>ふくらはぎ（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="ふくらはぎ（右側）" data-body-area />
+                      <span>ふくらはぎ（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="ふくらはぎ（右）" data-body-area />
-                      <span>ふくらはぎ（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="ふくらはぎ（左側）" data-body-area />
+                      <span>ふくらはぎ（左側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="足首・足指（左）" data-body-area />
-                      <span>足首・足指（左）</span>
+                      <input type="checkbox" name="symptom_areas" value="足首・足指（右側）" data-body-area />
+                      <span>足首・足指（右側）</span>
                     </label>
                     <label class="chip">
-                      <input type="checkbox" name="sensory_areas" value="足首・足指（右）" data-body-area />
-                      <span>足首・足指（右）</span>
+                      <input type="checkbox" name="symptom_areas" value="足首・足指（左側）" data-body-area />
+                      <span>足首・足指（左側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="臀部（右側）" data-body-area />
+                      <span>臀部（右側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="臀部（左側）" data-body-area />
+                      <span>臀部（左側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="膝裏（右側）" data-body-area />
+                      <span>膝裏（右側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="膝裏（左側）" data-body-area />
+                      <span>膝裏（左側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="かかと・足裏（右側）" data-body-area />
+                      <span>かかと・足裏（右側）</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_areas" value="かかと・足裏（左側）" data-body-area />
+                      <span>かかと・足裏（左側）</span>
                     </label>
                   </div>
-                  <p class="field-hint">体の図またはボタンを使って選択できます。特にない場合は「特に気になる部位はない」を選んでください。</p>
+                  <p class="field-hint">図またはボタンを使って選択できます。特にない場合は「特に気になる部位はない」を選択してください。</p>
                 </fieldset>
-                <label>
-                  しびれ・感覚の特徴
-                  <select name="sensory_quality">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="ピリピリする">ピリピリする</option>
-                    <option value="じんじんする">じんじんする</option>
-                    <option value="感覚が鈍い">感覚が鈍い</option>
-                    <option value="触ると違和感がある">触ると違和感がある</option>
-                    <option value="その他">その他</option>
-                  </select>
-                </label>
-                <label class="wide" data-conditional="sensory_quality:その他">
-                  その他の感じ方
-                  <input type="text" name="sensory_quality_other" />
+                <fieldset class="option-grid">
+                  <legend>症状の種類（複数選択可）</legend>
+                  <div class="chip-grid">
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="しびれ" />
+                      <span>しびれ</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="感覚が鈍い" />
+                      <span>感覚が鈍い</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="触ると違和感" />
+                      <span>触ると違和感</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="痛み" />
+                      <span>痛み</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="冷感" />
+                      <span>冷感</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="ほてり" />
+                      <span>ほてり</span>
+                    </label>
+                    <label class="chip">
+                      <input type="checkbox" name="symptom_types" value="その他" />
+                      <span>その他</span>
+                    </label>
+                  </div>
+                </fieldset>
+                <label class="wide" data-conditional="symptom_types:その他">
+                  その他の症状の種類
+                  <input type="text" name="symptom_types_other" />
                 </label>
                 <label class="wide">
-                  日時や状況など詳細
-                  <textarea name="sensory_detail" rows="2"></textarea>
+                  気になる状況や補足
+                  <textarea name="symptom_detail" rows="2"></textarea>
                 </label>
               </div>
               <div class="section-controls">
@@ -706,130 +685,6 @@
                     <option value="増加傾向">増加傾向</option>
                     <option value="減少傾向">減少傾向</option>
                   </select>
-                </label>
-              </div>
-              <div class="section-controls">
-                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
-                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>運動や身体活動の習慣（厚生労働省基準を参考）</h2>
-              <p class="section-note">
-                厚生労働省「健康づくりのための身体活動基準2013」を参考に、週150分以上の中等度の身体活動または75分以上の高強度運動を目指します。
-              </p>
-              <div class="grid">
-                <label>
-                  定期的な運動習慣
-                  <select name="regular_exercise">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="なし">なし</option>
-                    <option value="あり（週1〜2回）">あり（週1〜2回）</option>
-                    <option value="あり（週3回以上）">あり（週3回以上）</option>
-                  </select>
-                </label>
-                <label class="wide" data-conditional="regular_exercise:なし">
-                  運動を行えない・行わない理由
-                  <textarea name="exercise_barriers" rows="2"></textarea>
-                </label>
-                <label class="wide" data-conditional="regular_exercise:あり（週1〜2回）,regular_exercise:あり（週3回以上)">
-                  運動の内容・頻度
-                  <textarea name="exercise_detail" rows="2"></textarea>
-                </label>
-                <label>
-                  1日の平均歩数
-                  <select name="daily_steps">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="〜3,000歩">〜3,000歩</option>
-                    <option value="3,001〜6,000歩">3,001〜6,000歩</option>
-                    <option value="6,001〜8,000歩">6,001〜8,000歩</option>
-                    <option value="8,001歩以上">8,001歩以上</option>
-                  </select>
-                </label>
-                <label>
-                  身体活動強度の目安
-                  <select name="activity_intensity">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="1日60分未満の中等度活動">1日60分未満の中等度活動</option>
-                    <option value="1日60分以上の中等度活動">1日60分以上の中等度活動</option>
-                    <option value="週75分未満の高強度運動">週75分未満の高強度運動</option>
-                    <option value="週75分以上の高強度運動">週75分以上の高強度運動</option>
-                    <option value="中高強度の組み合わせで推奨基準達成">中高強度の組み合わせで推奨基準達成</option>
-                  </select>
-                </label>
-                <label>
-                  仕事・家事での身体負荷
-                  <select name="workload">
-                    <option value="" disabled selected>選択してください</option>
-                    <option value="軽度（主に座位）">軽度（主に座位）</option>
-                    <option value="中等度（立位・歩行が多い）">中等度（立位・歩行が多い）</option>
-                    <option value="高負荷（力仕事が多い）">高負荷（力仕事が多い）</option>
-                  </select>
-                </label>
-                <label class="wide">
-                  休養・セルフケア
-                  <textarea name="recovery" rows="2"></textarea>
-                </label>
-              </div>
-              <div class="section-controls">
-                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
-                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>こころの状態</h2>
-              <div class="grid">
-                <label class="wide">
-                  気分の変化やストレス
-                  <textarea name="mood_changes" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  睡眠障害・不安・抑うつ症状
-                  <textarea name="mental_symptoms" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  専門職への相談歴
-                  <textarea name="mental_health_history" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  やる気や活動量の変化
-                  <textarea name="motivation" rows="2"></textarea>
-                </label>
-              </div>
-              <div class="section-controls">
-                <button type="button" class="ghost-button" data-step="prev">前のセクションへ</button>
-                <button type="button" class="primary-button" data-step="next">次のセクションへ</button>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>理学療法士メモ</h2>
-              <div class="grid">
-                <label class="wide">
-                  姿勢・歩行・バランスの所見
-                  <textarea name="pt_observations" rows="3"></textarea>
-                </label>
-                <label class="wide">
-                  最近の測定値（血圧など）
-                  <textarea name="vital_signs" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  受診が望ましい理由
-                  <textarea name="referral_reason" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  今後共有したい専門職や機関
-                  <textarea name="collaboration_targets" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  本人・家族への説明内容と反応
-                  <textarea name="family_feedback" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  その他のメモ
-                  <textarea name="additional_notes" rows="2"></textarea>
                 </label>
               </div>
               <div class="section-controls">

@@ -294,8 +294,9 @@ fieldset {
 
 .body-map__figure-wrapper {
   position: relative;
-  width: 200px;
-  min-width: 200px;
+  width: 220px;
+  min-width: 220px;
+  padding-top: 36px;
 }
 
 .body-map__svg {
@@ -305,15 +306,34 @@ fieldset {
 }
 
 .body-map__figure {
-  fill: rgba(47, 125, 157, 0.08);
-  stroke: rgba(47, 125, 157, 0.3);
-  stroke-width: 2;
+  fill: rgba(47, 125, 157, 0.12);
+  stroke: rgba(47, 125, 157, 0.4);
+  stroke-width: 2.2;
 }
 
 .body-map__areas {
   position: absolute;
-  inset: 0;
+  top: 36px;
+  right: 0;
+  bottom: 0;
+  left: 0;
   pointer-events: none;
+}
+
+.body-map__label {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 2px 10px;
+  border-radius: 999px;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
 }
 
 .body-map__area {
@@ -322,11 +342,11 @@ fieldset {
   position: absolute;
   top: calc(var(--y) * 1px);
   left: calc(50% + var(--x) * 1px);
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 2px solid rgba(47, 125, 157, 0.45);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.95);
   transform: translate(-50%, -50%);
   pointer-events: auto;
   cursor: pointer;

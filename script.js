@@ -1,7 +1,7 @@
 const scriptURL =
   (typeof window !== 'undefined' && window.APPS_SCRIPT_URL ? window.APPS_SCRIPT_URL.trim() : '') ||
   (document.body?.dataset?.appsScriptUrl ? document.body.dataset.appsScriptUrl.trim() : '');
-const STORAGE_KEY = 'physio-questionnaire-v1';
+const STORAGE_KEY = 'physio-questionnaire-v2';
 
 const form = document.getElementById('questionnaireForm');
 if (!form) {
@@ -27,7 +27,7 @@ const weightInput = form.elements.namedItem('weight_kg');
 const bmiInput = form.elements.namedItem('bmi');
 const bodyMapElement = document.querySelector('[data-body-map]');
 const bodyMapSelection = document.querySelector('[data-body-map-selection]');
-const bodyAreaInputs = Array.from(form.querySelectorAll('input[name="sensory_areas"][data-body-area]'));
+const bodyAreaInputs = Array.from(form.querySelectorAll('input[name="symptom_areas"][data-body-area]'));
 const bodyMapButtons = bodyMapElement
   ? Array.from(bodyMapElement.querySelectorAll('.body-map__area'))
   : [];
@@ -759,7 +759,6 @@ async function handleSubmit(event) {
       payload[key] = value;
     }
   });
-  payload.timestamp = new Date().toISOString();
 
   if (!scriptURL) {
     statusMessage.textContent = '送信先URLが未設定です。config.js に Google Apps Script の WebアプリURL を設定してください。';
