@@ -306,6 +306,13 @@ label {
   font-size: 0.9rem;
 }
 
+.field-hint {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: -4px;
+}
+
 label input,
 label select,
 label textarea {

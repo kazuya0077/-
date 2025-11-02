@@ -12,7 +12,7 @@
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
+  <body data-apps-script-url="">
     <div class="page">
       <header class="header">
         <h1>理学療法士による受診勧奨サポート問診フォーム</h1>
@@ -56,11 +56,20 @@
                 </label>
                 <label>
                   生年月日
-                  <input type="date" name="birthdate" />
+                  <input
+                    type="text"
+                    name="birthdate"
+                    inputmode="numeric"
+                    pattern="\d{4}[-\/]?\d{2}[-\/]?\d{2}"
+                    placeholder="例：19801224 または 1980-12-24"
+                    aria-describedby="birthdateHint"
+                  />
+                  <span id="birthdateHint" class="field-hint">数字で入力できます（西暦8桁）</span>
                 </label>
                 <label>
                   年齢
-                  <input type="number" name="age" min="0" max="120" />
+                  <input type="number" name="age" min="0" max="120" readonly aria-live="polite" />
+                  <span class="field-hint">生年月日から自動計算されます</span>
                 </label>
                 <label>
                   性別
@@ -122,36 +131,44 @@
             </section>
 
             <section data-section>
-              <h2>既往歴・医療関連情報</h2>
+              <h2>これまでの病気やけが</h2>
               <div class="grid">
                 <label class="wide">
-                  診断されている疾患・障害
-                  <textarea name="diagnoses" rows="3"></textarea>
+                  既往歴（当てはまるものを選択）
+                  <select name="medical_history">
+                    <option value="" disabled selected>選択してください</option>
+                    <option value="特になし">特になし</option>
+                    <option value="高血圧">高血圧</option>
+                    <option value="糖尿病">糖尿病</option>
+                    <option value="脂質異常症">脂質異常症</option>
+                    <option value="心臓の病気">心臓の病気</option>
+                    <option value="脳卒中">脳卒中</option>
+                    <option value="骨や関節の病気">骨や関節の病気</option>
+                    <option value="呼吸器の病気">呼吸器の病気</option>
+                    <option value="その他">その他</option>
+                  </select>
+                  <span class="field-hint">複数ある場合は主なものを選び、必要に応じて下の欄に記入してください。</span>
+                </label>
+                <label class="wide" data-conditional="medical_history:その他">
+                  その他の病気やけが
+                  <textarea name="medical_history_other" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  主治医・かかりつけ医
-                  <input type="text" name="primary_physician" />
-                </label>
-                <label class="wide">
-                  入院歴・手術歴
-                  <textarea name="hospital_history" rows="3"></textarea>
-                </label>
-                <label class="wide">
-                  慢性疾患の管理状況
-                  <textarea name="chronic_management" rows="3"></textarea>
+                  入院や手術の経験（年代や内容など）
+                  <textarea name="hospital_history" rows="2"></textarea>
                 </label>
               </div>
             </section>
 
             <section data-section>
-              <h2>服薬・アレルギー情報</h2>
+              <h2>服用しているもの</h2>
               <div class="grid">
                 <label class="wide">
-                  現在服用している薬剤（処方薬・市販薬・サプリメント）
+                  現在飲んでいる薬やサプリメント
                   <textarea name="current_medications" rows="3"></textarea>
                 </label>
                 <label>
-                  服薬管理
+                  お薬の管理方法
                   <select name="medication_management">
                     <option value="" disabled selected>選択してください</option>
                     <option value="本人">本人</option>
@@ -160,18 +177,18 @@
                   </select>
                 </label>
                 <label data-conditional="medication_management:その他">
-                  その他（服薬管理）
+                  その他のお薬の管理方法
                   <input type="text" name="medication_management_other" />
                 </label>
                 <label class="wide">
-                  アレルギー・副作用歴
+                  食べ物や薬で気になること
                   <textarea name="allergies" rows="3"></textarea>
                 </label>
               </div>
             </section>
 
             <section data-section>
-              <h2>健診・検診受診状況</h2>
+              <h2>健診の受診状況</h2>
               <div class="grid">
                 <label>
                   一般健診（過去1年）
@@ -198,40 +215,18 @@
                   <input type="text" name="special_checkup_detail" placeholder="例：粉じん健診／2024-04-10" />
                 </label>
                 <label class="wide">
-                  健診結果の指摘事項
+                  健診で指摘されたこと
                   <textarea name="checkup_findings" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  未受診の場合の理由
+                  受けられていない理由
                   <textarea name="checkup_reason" rows="2"></textarea>
                 </label>
               </div>
             </section>
 
             <section data-section>
-              <h2>医療機関受診状況</h2>
-              <div class="grid">
-                <label class="wide">
-                  現在受診中の医療機関・診療科
-                  <textarea name="current_medical_facilities" rows="3"></textarea>
-                </label>
-                <label>
-                  最終受診日
-                  <input type="date" name="last_visit_date" />
-                </label>
-                <label class="wide">
-                  医療機関からの指示・注意事項
-                  <textarea name="medical_instructions" rows="3"></textarea>
-                </label>
-                <label class="wide">
-                  症状悪化時の連絡先・対応
-                  <textarea name="worsening_plan" rows="2"></textarea>
-                </label>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>転倒・転倒リスクサーベイ</h2>
+              <h2>転倒に関する質問</h2>
               <div class="grid">
                 <fieldset class="schema-group">
                   <legend>3KQ：転倒リスクの3つのキークエスチョン</legend>
@@ -293,7 +288,7 @@
                   <input type="number" name="fall_count" min="0" />
                 </label>
                 <label>
-                  転倒による受診・けが
+                  転倒で受診やけがをしたか
                   <select name="fall_injury">
                     <option value="" disabled selected>選択してください</option>
                     <option value="なし">なし</option>
@@ -301,11 +296,11 @@
                   </select>
                 </label>
                 <label data-conditional="fall_injury:あり" class="wide">
-                  受診内容・けがの状況
+                  受診内容やけがの様子
                   <textarea name="fall_injury_detail" rows="2"></textarea>
                 </label>
                 <label>
-                  転倒への不安
+                  転倒への不安の程度
                   <select name="fall_fear">
                     <option value="" disabled selected>選択してください</option>
                     <option value="なし">なし</option>
@@ -339,7 +334,7 @@
             </section>
 
             <section data-section>
-              <h2>生活機能・活動状況</h2>
+              <h2>普段の生活と活動</h2>
               <div class="grid">
                 <label>
                   日常生活動作（ADL）
@@ -360,19 +355,19 @@
                   </select>
                 </label>
                 <label class="wide">
-                  社会参加・役割
+                  地域や家族での役割
                   <textarea name="social_participation" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  睡眠の状況
+                  睡眠のようす
                   <textarea name="sleep_quality" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  食生活の特徴
+                  食事のようす
                   <textarea name="nutrition" rows="2"></textarea>
                 </label>
                 <label>
-                  水分摂取量（目安）
+                  1日の水分量の目安
                   <select name="hydration">
                     <option value="" disabled selected>選択してください</option>
                     <option value="1L未満">1L未満</option>
@@ -382,7 +377,7 @@
                   </select>
                 </label>
                 <label>
-                  排泄状況
+                  排泄のようす
                   <select name="elimination">
                     <option value="" disabled selected>選択してください</option>
                     <option value="問題なし">問題なし</option>
@@ -392,14 +387,14 @@
                   </select>
                 </label>
                 <label data-conditional="elimination:その他" class="wide">
-                  その他（排泄状況）
+                  その他の排泄のようす
                   <input type="text" name="elimination_other" />
                 </label>
               </div>
             </section>
 
             <section data-section>
-              <h2>身体機能・痛みの評価</h2>
+              <h2>体の動きや痛み</h2>
               <div class="grid">
                 <label>
                   痛み（0〜10）
@@ -409,71 +404,11 @@
                   </div>
                 </label>
                 <label class="wide">
-                  痛みの部位やタイミング
+                  痛みの場所やタイミング
                   <textarea name="pain_detail" rows="2"></textarea>
                 </label>
-                <fieldset class="schema-group wide">
-                  <legend>しびれ・感覚障害の部位</legend>
-                  <p class="schema-note">
-                    感覚障害が出現する部位をボディスキーマから選択してください。複数選択できます。
-                  </p>
-                  <div class="schema-grid" role="group" aria-label="しびれ・感覚障害の部位">
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="頭部・顔面" />
-                      <span>頭部・顔面</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="頸部" />
-                      <span>頸部</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="肩・上腕（右）" />
-                      <span>肩・上腕（右）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="肩・上腕（左）" />
-                      <span>肩・上腕（左）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="前腕・手（右）" />
-                      <span>前腕・手（右）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="前腕・手（左）" />
-                      <span>前腕・手（左）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="体幹（胸・背中）" />
-                      <span>体幹（胸・背中）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="体幹（腰・骨盤）" />
-                      <span>体幹（腰・骨盤）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="股関節・大腿（右）" />
-                      <span>股関節・大腿（右）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="股関節・大腿（左）" />
-                      <span>股関節・大腿（左）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="下腿・足（右）" />
-                      <span>下腿・足（右）</span>
-                    </label>
-                    <label class="chip">
-                      <input type="checkbox" name="sensory_regions" value="下腿・足（左）" />
-                      <span>下腿・足（左）</span>
-                    </label>
-                  </div>
-                  <label>
-                    感覚障害の詳細・誘因
-                    <textarea name="sensory_detail" rows="2" placeholder="例：朝の起床時に右手がしびれる／L4領域に灼熱感 など"></textarea>
-                  </label>
-                </fieldset>
                 <label class="wide">
-                  関節可動域・筋力低下の自覚
+                  動きづらさや筋力の気になる点
                   <textarea name="mobility_strength" rows="2"></textarea>
                 </label>
                 <label>
@@ -501,7 +436,7 @@
             </section>
 
             <section data-section>
-              <h2>運動・身体活動習慣（厚生労働省基準を参考）</h2>
+              <h2>運動や身体活動の習慣（厚生労働省基準を参考）</h2>
               <p class="section-note">
                 厚生労働省「健康づくりのための身体活動基準2013」を参考に、週150分以上の中等度の身体活動または75分以上の高強度運動を目指します。
               </p>
@@ -561,29 +496,7 @@
             </section>
 
             <section data-section>
-              <h2>環境・支援体制</h2>
-              <div class="grid">
-                <label class="wide">
-                  居住環境（段差・手すり等）
-                  <textarea name="living_environment" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  利用中の支援サービス
-                  <textarea name="support_services" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  家族・地域からの支援体制
-                  <textarea name="community_support" rows="2"></textarea>
-                </label>
-                <label class="wide">
-                  福祉用具・住宅改修の希望
-                  <textarea name="welfare_needs" rows="2"></textarea>
-                </label>
-              </div>
-            </section>
-
-            <section data-section>
-              <h2>精神・心理状態</h2>
+              <h2>こころの状態</h2>
               <div class="grid">
                 <label class="wide">
                   気分の変化やストレス
@@ -594,25 +507,25 @@
                   <textarea name="mental_symptoms" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  カウンセリング・精神科受診歴
+                  専門職への相談歴
                   <textarea name="mental_health_history" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  意欲や活動欲の変化
+                  やる気や活動量の変化
                   <textarea name="motivation" rows="2"></textarea>
                 </label>
               </div>
             </section>
 
             <section data-section>
-              <h2>理学療法士所見・連携メモ</h2>
+              <h2>理学療法士メモ</h2>
               <div class="grid">
                 <label class="wide">
                   姿勢・歩行・バランスの所見
                   <textarea name="pt_observations" rows="3"></textarea>
                 </label>
                 <label class="wide">
-                  バイタルサイン（測定値）
+                  最近の測定値（血圧など）
                   <textarea name="vital_signs" rows="2"></textarea>
                 </label>
                 <label class="wide">
@@ -620,7 +533,7 @@
                   <textarea name="referral_reason" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  連携が必要と考える職種・機関
+                  今後共有したい専門職や機関
                   <textarea name="collaboration_targets" rows="2"></textarea>
                 </label>
                 <label class="wide">
@@ -628,7 +541,7 @@
                   <textarea name="family_feedback" rows="2"></textarea>
                 </label>
                 <label class="wide">
-                  その他共有したいこと
+                  その他のメモ
                   <textarea name="additional_notes" rows="2"></textarea>
                 </label>
               </div>
@@ -666,6 +579,7 @@
       </div>
     </div>
 
+    <script src="config.js"></script>
     <script src="script.js" type="module"></script>
   </body>
 </html>

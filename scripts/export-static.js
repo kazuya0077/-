@@ -8,6 +8,8 @@ const filesToCopy = [
   'index.html',
   'styles.css',
   'script.js',
+  'config.js',
+  'config.sample.js',
   'google_apps_script.gs',
   'README.md'
 ];

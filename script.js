@@ -1,4 +1,6 @@
-const scriptURL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
+const scriptURL =
+  (typeof window !== 'undefined' && window.APPS_SCRIPT_URL ? window.APPS_SCRIPT_URL.trim() : '') ||
+  (document.body?.dataset?.appsScriptUrl ? document.body.dataset.appsScriptUrl.trim() : '');
 const STORAGE_KEY = 'physio-questionnaire-v1';
 
 const form = document.getElementById('questionnaireForm');
@@ -15,12 +17,18 @@ const progressValue = document.getElementById('progressValue');
 const clearStorageButton = document.getElementById('clearStorage');
 const lastSavedMessage = document.getElementById('lastSaved');
 const modalOverlay = previewModal.querySelector('[data-close-preview]');
+const birthdateInput = form.elements.namedItem('birthdate');
+const ageInput = form.elements.namedItem('age');
 
 const conditionalFields = Array.from(document.querySelectorAll('[data-conditional]'));
 const sections = Array.from(form.querySelectorAll('section[data-section]'));
 
 let saveTimeout = null;
 let isRestoring = false;
+
+if (ageInput) {
+  ageInput.readOnly = true;
+}
 
 function getFieldValue(name) {
   const element = form.elements.namedItem(name);
@@ -31,6 +39,9 @@ function getFieldValue(name) {
   if (element.type === 'checkbox') {
     return element.checked ? element.value : '';
   }
+  if (element instanceof HTMLSelectElement && element.multiple) {
+    return Array.from(element.selectedOptions).map((option) => option.value);
+  }
   return element.value || '';
 }
 
@@ -40,7 +51,13 @@ function clearFieldInputs(container) {
     if (input.type === 'checkbox' || input.type === 'radio') {
       input.checked = false;
     } else if (input.tagName.toLowerCase() === 'select') {
-      input.selectedIndex = 0;
+      if (input.multiple) {
+        Array.from(input.options).forEach((option) => {
+          option.selected = false;
+        });
+      } else {
+        input.selectedIndex = 0;
+      }
     } else if (input.type === 'range') {
       input.value = input.getAttribute('value') || '0';
       const outputId = input.dataset.output;
@@ -138,6 +155,12 @@ function saveFormState() {
       return;
     }
 
+    if (element instanceof HTMLSelectElement && element.multiple) {
+      const selectedValues = Array.from(element.selectedOptions).map((option) => option.value);
+      data[element.name] = selectedValues;
+      return;
+    }
+
     data[element.name] = element.value;
   });
 
@@ -160,6 +183,76 @@ function scheduleSave() {
   if (isRestoring) return;
   window.clearTimeout(saveTimeout);
   saveTimeout = window.setTimeout(saveFormState, 300);
+}
+
+function parseBirthdateDigits(digits) {
+  if (!digits || digits.length !== 8) return null;
+  const year = Number(digits.slice(0, 4));
+  const month = Number(digits.slice(4, 6));
+  const day = Number(digits.slice(6, 8));
+  if (Number.isNaN(year) || Number.isNaN(month) || Number.isNaN(day)) return null;
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+  return date;
+}
+
+function formatBirthdateDigits(digits) {
+  return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+}
+
+function calculateAge(birthdate) {
+  if (!(birthdate instanceof Date)) return '';
+  const today = new Date();
+  let age = today.getFullYear() - birthdate.getFullYear();
+  const monthDiff = today.getMonth() - birthdate.getMonth();
+  const dayDiff = today.getDate() - birthdate.getDate();
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age -= 1;
+  }
+  return age;
+}
+
+function updateAgeFromBirthdate(options = {}) {
+  if (!birthdateInput || !ageInput) return;
+  const { enforceFormat = false, fromBlur = false } = options;
+  const rawValue = birthdateInput.value || '';
+  if (!rawValue.trim()) {
+    ageInput.value = '';
+    birthdateInput.setCustomValidity('');
+    return;
+  }
+
+  const digits = rawValue.replace(/\D/g, '').slice(0, 8);
+  if (digits.length !== 8) {
+    ageInput.value = '';
+    if (fromBlur) {
+      birthdateInput.setCustomValidity('生年月日はYYYYMMDD形式で入力してください。');
+    } else {
+      birthdateInput.setCustomValidity('');
+    }
+    return;
+  }
+
+  const parsed = parseBirthdateDigits(digits);
+  if (!parsed) {
+    ageInput.value = '';
+    if (fromBlur) {
+      birthdateInput.setCustomValidity('生年月日が正しくありません。');
+    } else {
+      birthdateInput.setCustomValidity('');
+    }
+    return;
+  }
+
+  birthdateInput.setCustomValidity('');
+  if (enforceFormat) {
+    birthdateInput.value = formatBirthdateDigits(digits);
+  }
+
+  const age = calculateAge(parsed);
+  ageInput.value = Number.isFinite(age) && age >= 0 ? String(age) : '';
 }
 
 function setFieldValues(name, value) {
@@ -189,6 +282,14 @@ function setFieldValues(name, value) {
     return;
   }
 
+  if (element instanceof HTMLSelectElement && element.multiple) {
+    const values = Array.isArray(value) ? value : [value];
+    Array.from(element.options).forEach((option) => {
+      option.selected = values.includes(option.value);
+    });
+    return;
+  }
+
   element.value = Array.isArray(value) ? value[0] : value;
 }
 
@@ -209,6 +310,7 @@ function restoreFormState() {
     updateConditionalFields();
     initializeRangeOutputs();
     updateProgress();
+    updateAgeFromBirthdate({ enforceFormat: true });
     if (_timestamp) {
       setLastSavedMessage(_timestamp);
     }
@@ -427,6 +529,12 @@ function updateProgress() {
 
 async function handleSubmit(event) {
   event.preventDefault();
+  updateAgeFromBirthdate({ enforceFormat: true, fromBlur: true });
+  if (!form.reportValidity()) {
+    statusMessage.textContent = '未入力または形式が正しくない項目があります。確認してください。';
+    statusMessage.dataset.state = 'error';
+    return;
+  }
   statusMessage.textContent = '送信中です…';
   statusMessage.dataset.state = 'loading';
   submitButton.disabled = true;
@@ -445,8 +553,8 @@ async function handleSubmit(event) {
   });
   payload.timestamp = new Date().toISOString();
 
-  if (scriptURL.includes('YOUR_DEPLOYMENT_ID')) {
-    statusMessage.textContent = '送信先URLが未設定です。Apps Scriptを導入してURLを設定してください。';
+  if (!scriptURL) {
+    statusMessage.textContent = '送信先URLが未設定です。config.js に Google Apps Script の WebアプリURL を設定してください。';
     statusMessage.dataset.state = 'error';
     submitButton.disabled = false;
     return;
@@ -473,6 +581,7 @@ async function handleSubmit(event) {
     updateConditionalFields();
     initializeRangeOutputs();
     updateProgress();
+    updateAgeFromBirthdate();
     closePreview();
   } catch (error) {
     console.error(error);
@@ -488,6 +597,7 @@ updateConditionalFields();
 initializeRangeOutputs();
 restoreFormState();
 updateProgress();
+updateAgeFromBirthdate({ enforceFormat: true });
 
 form.addEventListener('submit', handleSubmit);
 form.addEventListener('change', () => {
@@ -503,6 +613,16 @@ form.addEventListener('input', (event) => {
   }
   scheduleSave();
 });
+
+if (birthdateInput) {
+  birthdateInput.addEventListener('input', () => {
+    updateAgeFromBirthdate();
+  });
+  birthdateInput.addEventListener('blur', () => {
+    updateAgeFromBirthdate({ enforceFormat: true, fromBlur: true });
+    scheduleSave();
+  });
+}
 
 previewButton.addEventListener('click', () => {
   openPreview();
@@ -532,6 +652,7 @@ clearStorageButton.addEventListener('click', () => {
   updateConditionalFields();
   initializeRangeOutputs();
   updateProgress();
+  updateAgeFromBirthdate();
   setLastSavedMessage();
   statusMessage.textContent = '保存データを削除しました。';
   statusMessage.dataset.state = 'success';
