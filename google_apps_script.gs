@@ -19,9 +19,22 @@ function doPost(e) {
   const row = headers.map((header) => (header in requestData ? normalizeValue(requestData[header]) : ''));
   sheet.appendRow(row);
 
-  return ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(
+  const output = ContentService.createTextOutput(JSON.stringify({ success: true })).setMimeType(
     ContentService.MimeType.JSON
   );
+  return withCors(output);
+}
+
+function doGet() {
+  const output = ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(
+    ContentService.MimeType.JSON
+  );
+  return withCors(output);
+}
+
+function doOptions() {
+  const output = ContentService.createTextOutput('').setMimeType(ContentService.MimeType.TEXT);
+  return withCors(output);
 }
 
 function getHeaders(sheet, payload) {
@@ -47,4 +60,11 @@ function normalizeValue(value) {
     return JSON.stringify(value);
   }
   return value;
+}
+
+function withCors(output) {
+  return output
+    .setHeader('Access-Control-Allow-Origin', '*')
+    .setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS')
+    .setHeader('Access-Control-Allow-Headers', 'Content-Type');
 }

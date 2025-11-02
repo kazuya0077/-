@@ -22,6 +22,15 @@ const lastSavedMessage = document.getElementById('lastSaved');
 const modalOverlay = previewModal.querySelector('[data-close-preview]');
 const birthdateInput = form.elements.namedItem('birthdate');
 const ageInput = form.elements.namedItem('age');
+const heightInput = form.elements.namedItem('height_cm');
+const weightInput = form.elements.namedItem('weight_kg');
+const bmiInput = form.elements.namedItem('bmi');
+const bodyMapElement = document.querySelector('[data-body-map]');
+const bodyMapSelection = document.querySelector('[data-body-map-selection]');
+const bodyAreaInputs = Array.from(form.querySelectorAll('input[name="sensory_areas"][data-body-area]'));
+const bodyMapButtons = bodyMapElement
+  ? Array.from(bodyMapElement.querySelectorAll('.body-map__area'))
+  : [];
 
 const conditionalFields = Array.from(document.querySelectorAll('[data-conditional]'));
 const sections = Array.from(form.querySelectorAll('section[data-section]'));
@@ -36,10 +45,18 @@ if (ageInput) {
   ageInput.readOnly = true;
 }
 
+if (bmiInput) {
+  bmiInput.readOnly = true;
+}
+
 function getFieldValue(name) {
   const element = form.elements.namedItem(name);
   if (!element) return '';
   if (typeof RadioNodeList !== 'undefined' && element instanceof RadioNodeList) {
+    const items = Array.from(element);
+    if (items.length && items[0].type === 'checkbox') {
+      return items.filter((item) => item.checked).map((item) => item.value);
+    }
     return element.value;
   }
   if (element.type === 'checkbox') {
@@ -340,6 +357,127 @@ function updateAgeFromBirthdate(options = {}) {
   ageInput.value = Number.isFinite(age) && age >= 0 ? String(age) : '';
 }
 
+function calculateBmiValue(heightCm, weightKg) {
+  if (!Number.isFinite(heightCm) || !Number.isFinite(weightKg)) return '';
+  if (heightCm <= 0 || weightKg <= 0) return '';
+  const heightMeters = heightCm / 100;
+  if (heightMeters <= 0) return '';
+  const bmi = weightKg / (heightMeters * heightMeters);
+  if (!Number.isFinite(bmi)) return '';
+  return Math.round(bmi * 10) / 10;
+}
+
+function updateBmiFromInputs() {
+  if (!bmiInput) return;
+  const height = heightInput ? Number.parseFloat(heightInput.value) : NaN;
+  const weight = weightInput ? Number.parseFloat(weightInput.value) : NaN;
+  const bmi = calculateBmiValue(height, weight);
+  bmiInput.value = bmi ? String(bmi) : '';
+}
+
+function getExclusiveGroupNames() {
+  const exclusives = Array.from(form.querySelectorAll('input[data-exclusive]'));
+  const names = new Set(exclusives.map((input) => input.name).filter(Boolean));
+  return Array.from(names);
+}
+
+function enforceExclusiveSelections(name) {
+  const targets = name ? [name] : getExclusiveGroupNames();
+  targets.forEach((groupName) => {
+    if (!groupName) return;
+    const exclusives = Array.from(form.querySelectorAll(`input[name="${groupName}"][data-exclusive]`));
+    if (exclusives.length === 0) return;
+    const others = Array.from(form.querySelectorAll(`input[name="${groupName}"]:not([data-exclusive])`));
+    const exclusiveChecked = exclusives.some((input) => input.checked);
+    if (exclusiveChecked) {
+      others.forEach((input) => {
+        if (input.checked) {
+          input.checked = false;
+        }
+      });
+    } else if (others.some((input) => input.checked)) {
+      exclusives.forEach((input) => {
+        if (input.checked) {
+          input.checked = false;
+        }
+      });
+    }
+  });
+}
+
+function updateBodyMapSelection() {
+  if (!bodyMapSelection) return;
+  const selections = bodyAreaInputs
+    .filter((input) => input.checked && input.value !== '特に気になる部位はない')
+    .map((input) => input.value);
+  const hasNoneSelected = bodyAreaInputs.some((input) => input.checked && 'exclusive' in input.dataset);
+  bodyMapSelection.innerHTML = '';
+  if (selections.length === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'body-map__empty';
+    empty.textContent = hasNoneSelected ? '特に気になる部位はありません。' : '選択された部位はありません。';
+    bodyMapSelection.appendChild(empty);
+    return;
+  }
+  selections.forEach((value) => {
+    const chip = document.createElement('span');
+    chip.className = 'body-map__chip';
+    chip.textContent = value;
+    bodyMapSelection.appendChild(chip);
+  });
+}
+
+function syncBodyMapButtons() {
+  if (!bodyMapButtons.length) return;
+  const activeValues = new Set(bodyAreaInputs.filter((input) => input.checked).map((input) => input.value));
+  bodyMapButtons.forEach((button) => {
+    const value = button.dataset.area;
+    if (!value) return;
+    const isActive = activeValues.has(value);
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+  });
+}
+
+function initializeBodyMapInteractions() {
+  if (!bodyMapElement) return;
+  bodyMapButtons.forEach((button) => {
+    if (!button.hasAttribute('aria-pressed')) {
+      button.setAttribute('aria-pressed', 'false');
+    }
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      const value = button.dataset.area;
+      if (!value) return;
+      const inputs = bodyAreaInputs.filter((input) => input.value === value);
+      if (inputs.length === 0) return;
+      const shouldCheck = !inputs[0].checked;
+      inputs.forEach((input) => {
+        input.checked = shouldCheck;
+      });
+      if (inputs.length > 0) {
+        enforceExclusiveSelections(inputs[0].name);
+      }
+      syncBodyMapButtons();
+      updateBodyMapSelection();
+      updateConditionalFields();
+      updateProgress();
+      scheduleSave();
+    });
+  });
+
+  bodyAreaInputs.forEach((input) => {
+    input.addEventListener('change', () => {
+      enforceExclusiveSelections(input.name);
+      syncBodyMapButtons();
+      updateBodyMapSelection();
+    });
+  });
+
+  syncBodyMapButtons();
+  updateBodyMapSelection();
+}
+
 function setFieldValues(name, value) {
   const element = form.elements.namedItem(name);
   if (!element) return;
@@ -396,6 +534,10 @@ function restoreFormState() {
     initializeRangeOutputs();
     updateProgress();
     updateAgeFromBirthdate({ enforceFormat: true });
+    updateBmiFromInputs();
+    enforceExclusiveSelections();
+    syncBodyMapButtons();
+    updateBodyMapSelection();
     if (_timestamp) {
       setLastSavedMessage(_timestamp);
     }
@@ -632,11 +774,29 @@ async function handleSubmit(event) {
       headers: {
         'Content-Type': 'application/json',
       },
+      mode: 'cors',
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      throw new Error(`Failed with status ${response.status}`);
+    let result = null;
+    const contentType = response.headers.get('Content-Type') || '';
+    if (contentType.includes('application/json')) {
+      result = await response.json();
+    } else {
+      const text = await response.text();
+      try {
+        result = JSON.parse(text);
+      } catch (error) {
+        result = text;
+      }
+    }
+
+    if (!response.ok || (result && typeof result === 'object' && result.success === false)) {
+      const message =
+        result && typeof result === 'object' && result.message
+          ? result.message
+          : `Failed with status ${response.status}`;
+      throw new Error(message);
     }
 
     statusMessage.textContent = '送信が完了しました。ご協力ありがとうございます。';
@@ -648,6 +808,10 @@ async function handleSubmit(event) {
     initializeRangeOutputs();
     updateProgress();
     updateAgeFromBirthdate();
+    updateBmiFromInputs();
+    enforceExclusiveSelections();
+    syncBodyMapButtons();
+    updateBodyMapSelection();
     showSection(0);
     closePreview();
   } catch (error) {
@@ -666,6 +830,9 @@ initializeRangeOutputs();
 restoreFormState();
 updateProgress();
 updateAgeFromBirthdate({ enforceFormat: true });
+updateBmiFromInputs();
+enforceExclusiveSelections();
+initializeBodyMapInteractions();
 showSection(currentSectionIndex, { preventFocus: true });
 
 sections.forEach((section, index) => {
@@ -696,16 +863,27 @@ sections.forEach((section, index) => {
 });
 
 form.addEventListener('submit', handleSubmit);
-form.addEventListener('change', () => {
+form.addEventListener('change', (event) => {
+  if (event && event.target && typeof event.target.name === 'string' && event.target.name) {
+    enforceExclusiveSelections(event.target.name);
+  } else {
+    enforceExclusiveSelections();
+  }
   updateConditionalFields();
   initializeRangeOutputs();
   updateProgress();
+  updateBmiFromInputs();
+  syncBodyMapButtons();
+  updateBodyMapSelection();
   scheduleSave();
 });
 
 form.addEventListener('input', (event) => {
   if (event.target.matches('input[type="range"]')) {
     initializeRangeOutputs();
+  }
+  if (event.target === heightInput || event.target === weightInput) {
+    updateBmiFromInputs();
   }
   scheduleSave();
 });
@@ -749,6 +927,10 @@ clearStorageButton.addEventListener('click', () => {
   initializeRangeOutputs();
   updateProgress();
   updateAgeFromBirthdate();
+  updateBmiFromInputs();
+  enforceExclusiveSelections();
+  syncBodyMapButtons();
+  updateBodyMapSelection();
   showSection(0);
   setLastSavedMessage();
   statusMessage.textContent = '保存データを削除しました。';

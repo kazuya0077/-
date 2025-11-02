@@ -237,6 +237,138 @@ fieldset {
   margin: 0;
 }
 
+.option-grid {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 18px 20px 20px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.option-grid legend {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.body-map-card {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.body-map-card__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.body-map {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.body-map__figures {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: max-content;
+}
+
+.body-map__figure-wrapper {
+  position: relative;
+  width: 200px;
+  min-width: 200px;
+}
+
+.body-map__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.body-map__figure {
+  fill: rgba(47, 125, 157, 0.08);
+  stroke: rgba(47, 125, 157, 0.3);
+  stroke-width: 2;
+}
+
+.body-map__areas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.body-map__area {
+  --x: 0;
+  --y: 0;
+  position: absolute;
+  top: calc(var(--y) * 1px);
+  left: calc(50% + var(--x) * 1px);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid rgba(47, 125, 157, 0.45);
+  background: rgba(255, 255, 255, 0.92);
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.body-map__area:hover,
+.body-map__area:focus-visible {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(47, 125, 157, 0.15);
+}
+
+.body-map__area.is-active,
+.body-map__area[aria-pressed='true'] {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.body-map__selection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 24px;
+}
+
+.body-map__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(47, 125, 157, 0.12);
+  color: var(--primary-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.body-map__empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 .schema-group {
   grid-column: 1 / -1;
   border: 1px solid var(--border);
