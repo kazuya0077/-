@@ -165,19 +165,9 @@ function collectRowValues() {
 
 function buildSubmissionPayload() {
   const row = collectRowValues();
-  const dataMap = {};
-  FIXED_HEADERS.forEach((header, index) => {
-    dataMap[header] = row[index];
-  });
-
   return {
     headers: FIXED_HEADERS,
     row,
-    data: {
-      headers: FIXED_HEADERS,
-      row,
-      values: dataMap,
-    },
   };
 }
 

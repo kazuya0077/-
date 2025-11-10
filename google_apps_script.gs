@@ -131,8 +131,8 @@ function resolveHeadersAndRow(payload) {
 
   for (let i = 0; i < sources.length; i += 1) {
     const candidate = sources[i];
-    const headers = candidate && Array.isArray(candidate.headers) ? candidate.headers : null;
-    const row = candidate && Array.isArray(candidate.row) ? candidate.row : null;
+    const headers = normalizeToArray(candidate ? candidate.headers : null);
+    const row = normalizeToArray(candidate ? candidate.row : null);
     if (headers && row) {
       return zipHeadersAndRow(headers, row);
     }
@@ -188,6 +188,16 @@ function findValueForHeader(data, header) {
     }
   }
   return '';
+}
+
+function normalizeToArray(value) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  // headers/row が JSON 文字列で渡ってきた場合にも対応する
+  const parsed = parseMaybeJson(value);
+  return Array.isArray(parsed) ? parsed : null;
 }
 
 function zipHeadersAndRow(headers, row) {
